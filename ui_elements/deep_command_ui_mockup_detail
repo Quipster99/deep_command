@@ -1,0 +1,645 @@
+# Deep Command UI Element Guide
+## Complete Breakdown of Interface Components
+
+---
+
+## Overview
+
+The Deep Command UI is designed around a multi-layer base management interface with persistent visibility of critical information. The layout follows RTS conventions while adding unique elements for vertical layer navigation and indirect mission control.
+
+---
+
+## Layout Zones
+
+The interface is divided into five primary zones:
+
+1. **Top Left**: Minimap and Layer Navigator
+2. **Top Right**: Command Sidebar (Primary Interaction)
+3. **Center**: Main Viewport (Game World)
+4. **Top Right Secondary**: Active Mission Panel (Contextual)
+5. **Bottom**: Status Bar and Controls
+
+---
+
+## 1. Minimap Panel
+
+**Location**: Top-left corner  
+**Size**: 256px width (fixed)  
+**Purpose**: Provides spatial awareness of current layer and quick navigation
+
+### Components
+
+#### Header Bar
+- **Map Icon**: Visual indicator of panel purpose
+- **"MINIMAP" Label**: Panel identification
+- **Layer Display**: Shows current active layer (e.g., "Layer 0" or "Layer -5")
+
+#### Minimap Display
+- **Aspect Ratio**: Square (1:1)
+- **Background**: Dark with subtle texture
+- **Base Layout**: Blue-tinted overlay showing excavated areas
+- **Elevator Markers**: Yellow pulsing dots indicating elevator locations
+  - Critical for understanding vertical connectivity
+  - Helps plan movement between layers
+
+#### Control Buttons
+- **Grid Overlay**: Toggles coordinate grid display
+- **Show Elevators**: Highlights all elevator locations on current layer
+  - Essential for planning expansion
+  - Shows connectivity gaps
+
+### Design Rationale
+
+The minimap is always visible to maintain spatial awareness in the complex multi-layer environment. Elevator markers are prominent because vertical movement is a core strategic element. The square format provides maximum information density in minimal screen space.
+
+---
+
+## 2. Layer Navigator
+
+**Location**: Top-left, adjacent to minimap  
+**Size**: Compact vertical panel  
+**Purpose**: Quick layer switching and depth awareness
+
+### Components
+
+#### Header
+- **"LAYERS" Label**: Panel identification
+- Compact design to minimize screen space usage
+
+#### Layer Buttons
+- **Total Count**: 20 buttons (Surface to Layer -19)
+- **Surface (Layer 0)**: Labeled as "Surface" for clarity
+- **Underground Layers**: Labeled as "L -1", "L -2", etc.
+
+#### Visual States
+
+1. **Active Layer** (Current)
+   - Blue background (#2563eb)
+   - White text
+   - Most prominent state
+
+2. **Nearby Layers** (Within 3 levels)
+   - Gray background (#374151)
+   - Light gray text (#d1d5db)
+   - Hover effect (darker gray)
+   - Indicates accessible and visible layers
+
+3. **Deep Layers** (More than 3 levels away)
+   - Darker gray background (#1f2937)
+   - Muted text (#6b7280)
+   - Visual indication of distance from current layer
+
+### Interaction
+
+- **Click**: Jump directly to selected layer
+- **Scroll**: Navigate through all 20 layers
+- **Visual Feedback**: Color intensity indicates proximity to current layer
+
+### Design Rationale
+
+The layer navigator provides immediate access to any level of the base. The visual hierarchy (bright to dim) helps players understand their position in the vertical space. This is crucial because players will frequently need to move between layers to manage different areas of their base.
+
+---
+
+## 3. Right Sidebar (Command Panel)
+
+**Location**: Right side of screen  
+**Size**: 320px width, extends from top to near-bottom  
+**Purpose**: Primary player interaction for all major systems
+
+### Tab Navigation Bar
+
+Four main tabs represent core game systems:
+
+1. **Build** (Wrench icon)
+   - Room construction and excavation
+   - Most frequently used in early-mid game
+
+2. **Personnel** (Users icon)
+   - Minion and hero management
+   - Task assignment and status monitoring
+
+3. **Missions** (AlertCircle icon)
+   - Away mission planning and selection
+   - Critical for progression
+
+4. **Research** (FlaskConical icon)
+   - Technology tree and project management
+   - Long-term strategic planning
+
+#### Visual States
+- **Active Tab**: Dark gray background (#374151), blue text (#60a5fa)
+- **Inactive Tab**: Transparent, gray text (#9ca3af)
+- **Hover**: Semi-transparent gray overlay
+
+---
+
+### Build Tab Content
+
+**Purpose**: Place buildings and manage construction
+
+#### Building Categories (Grid Layout)
+
+Four main categories displayed as large icon buttons:
+
+1. **Infrastructure** (Wrench)
+   - Power generators, life support, quarters, elevators
+   - Essential for base operation
+
+2. **Operational** (Users)
+   - Portal chamber, briefing room, cafeteria
+   - Mission support and morale
+
+3. **Research** (Flask)
+   - Laboratories, containment, engineering bay
+   - Advancement and discovery
+
+4. **Security** (Shield)
+   - Security office, armory, defenses
+   - Base protection
+
+#### Building List (Currently: Infrastructure)
+
+Each building entry displays:
+- **Building Name**: Bold, prominent text
+- **Cost Information**: "50 Supplies • 10s"
+  - Resource cost
+  - Construction time
+- **Interaction**: Click to select for placement
+
+#### Buildings Shown in Mockup
+- Command Center
+- Power Generator
+- Life Support
+- Quarters
+- Elevator
+
+### Design Rationale
+
+Two-tier navigation (category → specific building) prevents overwhelming the player with too many options at once. Cost information is immediately visible for quick decision-making. The elevator appears in this list because it's a building type, reinforcing its role as infrastructure.
+
+---
+
+### Personnel Tab Content
+
+**Purpose**: Monitor and manage all base personnel
+
+#### Sub-Navigation
+- **Minions Button**: Blue/active, shows count "(24)"
+- **Heroes Button**: Gray/inactive, shows count "(6)"
+
+#### Minion List
+
+Each minion entry shows:
+
+1. **Avatar**: Icon placeholder (Users icon)
+   - 40x40px square
+   - Dark gray background
+
+2. **Information**
+   - **Name**: "Worker #1", "Worker #2", etc.
+   - **Location**: "Layer -5" (current position)
+   - **Current Task**: "Excavating", "Building", "Idle"
+
+3. **Progress Bar**
+   - Green fill indicating task completion
+   - Percentage varies (60-100% in mockup)
+   - Visual feedback on work status
+
+### Design Rationale
+
+The personnel tab provides at-a-glance status of all units. Progress bars give immediate feedback on task completion. Location information (layer) is crucial for the multi-level environment. The split between minions and heroes reflects their different roles: autonomous workers vs. controllable mission specialists.
+
+---
+
+### Missions Tab Content
+
+**Purpose**: Browse available missions and plan expeditions
+
+#### Mission Cards
+
+Each mission displays:
+
+1. **Mission Name**: "Salvage Operation", "First Contact", etc.
+2. **Metadata Row**:
+   - **Difficulty**: Low/Medium/High (color-coded)
+   - **Duration**: Estimated time (~15-40 min)
+3. **Action Button**: "Plan Mission"
+   - Blue background
+   - Leads to team assembly screen
+
+#### Missions Shown
+- **Salvage Operation**: Medium difficulty, 25 min
+- **First Contact**: High difficulty, 40 min
+- **Resource Survey**: Low difficulty, 15 min
+
+### Design Rationale
+
+Mission cards provide essential decision-making information at a glance. Difficulty and duration help players choose appropriate missions for their current situation. The "Plan Mission" button initiates the multi-step mission preparation process described in the design documents.
+
+---
+
+### Research Tab Content
+
+**Purpose**: Manage technology advancement
+
+#### Active Research Section
+
+Shows currently running projects:
+- **Project Name**: "Advanced Power Systems"
+- **Progress Bar**: Purple fill (65% complete)
+- **Resources**:
+  - Scientist count: "Scientists: 2"
+  - Time remaining: "~8:30 remaining"
+
+#### Available Research Section
+
+Lists unlocked but not started projects:
+- Alien Biology
+- Energy Weapons
+- Portal Science
+
+Each with a "Start Research" button (purple theme)
+
+### Design Rationale
+
+The split between active and available research reflects the game's design of allowing multiple simultaneous projects. Purple color scheme distinguishes research from other systems. Time remaining helps players plan when new technologies will become available.
+
+---
+
+## 4. Active Mission Panel
+
+**Location**: Top-right, left of command sidebar  
+**Size**: 288px width  
+**State**: Contextual (only visible when mission active)
+
+### Purpose
+Real-time monitoring and control of away teams during missions
+
+### Components
+
+#### Header
+- **"ACTIVE MISSION" Label**: Orange text (#fb923c)
+- **Orange Border**: Indicates alert/active state
+- **Close Button**: "✕" to minimize panel
+
+#### Mission Information
+- **Mission Name**: "Salvage Operation" (prominent)
+- **Elapsed Time**: "18:34 elapsed"
+  - Clock icon for clarity
+  - Continuous update
+
+#### Team Health Display
+
+Six horizontal bars representing team members:
+- **Green**: >75% health (healthy)
+- **Yellow**: 40-75% health (wounded)
+- **Red**: <40% health (critical)
+- Health percentages: 85%, 92%, 78%, 100%, 65%, 88%
+
+#### Status Update Box
+- Dark gray background
+- Latest team report
+- Example: "Team investigating structure. Energy readings detected."
+- Blue highlight for "Status:" label
+
+#### Emergency Control
+- **Emergency Recall Button**: Red background
+- Last-resort option to abort mission
+- Prominent placement for critical situations
+
+### Design Rationale
+
+The orange border creates visual urgency and makes the panel stand out from other UI elements. Team health bars provide critical at-a-glance information about squad status. The emergency recall button is prominent but color-coded red to discourage casual use. This panel embodies the "indirect control" philosophy—players receive updates and can make strategic decisions, but don't control moment-to-moment tactics.
+
+---
+
+## 5. Main Viewport
+
+**Location**: Center of screen  
+**Size**: Flexible (fills remaining space)  
+**Purpose**: Display game world and player base
+
+### Content (Not shown in mockup)
+
+The viewport would display:
+- Current layer's terrain and tiles
+- Buildings and rooms on current layer
+- Units (minions and heroes) moving and working
+- X-ray view of adjacent layers (ghosted)
+- Selection indicators and placement previews
+- Particle effects (portal, excavation, etc.)
+
+### Interaction Methods
+
+1. **Left Click**: Select units/buildings
+2. **Right Click**: Context actions (move, assign task)
+3. **Click + Drag**: Area selection or camera pan
+4. **Mouse Wheel**: Zoom in/out
+5. **WASD**: Camera movement
+6. **Q/E**: Quick layer switching
+
+### Design Rationale
+
+The viewport is the player's primary window into the game world. Maximum screen space is dedicated to this area because players need to see their complex multi-layer base. The surrounding UI provides tools and information but doesn't dominate the view.
+
+---
+
+## 6. Bottom Status Bar
+
+**Location**: Bottom of screen  
+**Size**: 64px height (fixed), full width  
+**Purpose**: Always-visible critical information and controls
+
+### Left Section: Resource Display
+
+Four critical resources shown with icon + values:
+
+#### 1. Power (ZapOff icon, Yellow)
+- **Current/Max**: 450/600
+- **Rate**: -15/min (red text)
+- **Meaning**: Power consumption exceeds generation
+
+#### 2. Supplies (Package icon, Gray)
+- **Current/Max**: 1,250/2,000
+- **Rate**: -5/min (red text)
+- **Meaning**: General construction materials depleting
+
+#### 3. Food (Heart icon, Green)
+- **Current/Max**: 380/500
+- **Rate**: -8/min (red text)
+- **Meaning**: Personnel consuming food
+
+#### 4. Medical (Syringe icon, Red)
+- **Current/Max**: 120/200
+- **Rate**: -2/min (red text)
+- **Meaning**: Medical supplies being used
+
+### Visual Encoding
+- **Icon Color**: Matches resource type for quick recognition
+- **Rate Color**:
+  - Red: Negative (consuming)
+  - Green: Positive (generating)
+  - Gray: Neutral (balanced)
+- **Font**: Monospace for numerical alignment
+
+---
+
+### Center Section: Time Controls
+
+**Purpose**: Manage game speed and pause
+
+#### Pause/Play Button
+- **Paused State**: Yellow background, Play icon
+- **Playing State**: Gray background, Pause icon
+- Toggles game execution
+
+#### Speed Controls
+Three speed multiplier buttons:
+
+1. **1x**: Normal speed, no icon
+2. **2x**: Double speed, FastForward icon
+3. **3x**: Triple speed, FastForward icon
+
+**Active State**: Blue background, white text  
+**Inactive State**: Gray background, light gray text
+
+#### Game Time Display
+- **Format**: "Day 45 • 14:32"
+- Shows in-game date and time
+- Monospace font for consistency
+
+### Design Rationale
+
+Time controls are centrally located because they're frequently used. The pause button has distinct visual feedback (yellow) to show paused state clearly. Speed controls allow players to speed through slow periods or slow down during complex operations.
+
+---
+
+### Right Section: Quick Navigation & System
+
+#### Layer Quick Navigator
+- **Up Arrow**: Move to layer above (toward surface)
+- **Down Arrow**: Move to layer below (deeper)
+- **Current Layer Display**: "L 0" or "L -5"
+  - Blue text for visibility
+  - Monospace font
+  - 48px width for alignment
+
+#### System Buttons
+- **Save Button**: Floppy disk icon
+  - Quick save without opening menu
+- **Menu Button**: Hamburger icon
+  - Access settings, load, quit, etc.
+
+### Design Rationale
+
+Layer navigation in the bottom bar complements the full layer navigator on the left. Up/down arrows provide quick single-step movement for players who don't want to click the full navigator. Save and menu buttons are always accessible but tucked away to prevent accidental clicks.
+
+---
+
+## Color Scheme & Visual Identity
+
+### Primary Colors
+- **Blue** (#2563eb to #60a5fa): Active states, important info
+- **Gray Scale**: Base UI elements, neutral states
+- **Orange** (#fb923c to #fb7185): Alerts, active missions
+- **Purple** (#9333ea to #a855f7): Research and technology
+- **Red** (#dc2626): Danger, critical alerts, negative rates
+- **Green** (#22c55e): Positive states, growth, positive rates
+- **Yellow** (#eab308): Warnings, pause state, elevators
+
+### Background Hierarchy
+- **Darkest** (#111827): Main background
+- **Dark** (#1f2937): Panels and containers
+- **Medium** (#374151): Active elements
+- **Light** (#4b5563): Hover states
+
+### Design Philosophy
+
+The dark theme reduces eye strain during long play sessions. Blue accents guide attention to interactive elements. Color-coded feedback (red/yellow/green) provides instant status understanding. The earth-tone background (amber-brown) in the viewport suggests the underground setting.
+
+---
+
+## Responsive Design Considerations
+
+### Fixed Elements
+- Minimap: 256px width
+- Layer Navigator: Compact width (~80px)
+- Command Sidebar: 320px width
+- Bottom Bar: 64px height
+
+### Flexible Elements
+- Main Viewport: Fills remaining space
+- Active Mission Panel: Appears/disappears as needed
+
+### Minimum Recommended Resolution
+- **1280x720**: Functional but cramped
+- **1920x1080**: Optimal experience
+- **2560x1440+**: Ideal for detailed base viewing
+
+---
+
+## Accessibility Features
+
+### Visual
+- High contrast between text and backgrounds
+- Color-blind friendly: Icons supplement color coding
+- Monospace fonts for numbers (easier to scan)
+- Clear visual hierarchy with size and weight
+
+### Interaction
+- Large click targets (minimum 32px)
+- Hover states on all interactive elements
+- Keyboard shortcuts for all major actions
+- No critical information in color alone
+
+### Readability
+- Font sizes: 12px minimum for labels, 10px for metadata
+- Bold text for important information
+- Adequate spacing between interactive elements
+- Custom scrollbar styling for consistency
+
+---
+
+## State Management & Feedback
+
+### Game States Reflected in UI
+
+1. **Building Mode**
+   - Cursor changes to ghost building
+   - Valid/invalid placement indicators
+   - Cost display updates
+
+2. **Selection Mode**
+   - Selected units highlighted in viewport
+   - Personnel tab shows detailed info
+   - Context menu appears on right-click
+
+3. **Mission Planning**
+   - Command sidebar switches to team assembly
+   - Available heroes highlighted
+   - Launch button appears when team ready
+
+4. **Mission Active**
+   - Active Mission Panel appears
+   - Regular status updates
+   - Alert indicators if team in danger
+
+5. **Paused**
+   - Yellow pause button
+   - "PAUSED" indicator
+   - Time controls remain accessible
+
+---
+
+## Information Hierarchy
+
+### Critical (Always Visible)
+- Resources (bottom bar)
+- Current layer (multiple locations)
+- Game time and speed
+- Active mission status (if applicable)
+
+### Important (Prominent but not always visible)
+- Available buildings
+- Personnel status
+- Available missions
+- Research progress
+
+### Secondary (Available on demand)
+- Detailed unit information
+- Building details
+- Mission briefings
+- Tech tree
+
+### Tertiary (Hidden in menus)
+- Settings
+- Save/load
+- Statistics
+- Encyclopedia
+
+---
+
+## Workflow Examples
+
+### Building a New Room
+
+1. Player clicks **Build tab** in command sidebar
+2. Selects **Infrastructure category**
+3. Clicks **Power Generator** from list
+4. Viewport shows ghost preview following cursor
+5. Player navigates to desired layer (Layer Navigator or Q/E keys)
+6. Clicks valid location in viewport
+7. Cost deducted from resources (bottom bar updates)
+8. Construction begins (progress shown in building)
+
+### Managing a Crisis
+
+1. Power indicator in bottom bar turns red (shortage)
+2. Player checks **Resource Display**: -15/min power
+3. Opens **Build tab** → Infrastructure → Power Generator
+4. Places new generator
+5. Assigns worker in **Personnel tab** to speed construction
+6. Monitors progress bar until complete
+7. Power rate turns neutral or positive
+
+### Launching a Mission
+
+1. Player clicks **Missions tab** in command sidebar
+2. Reviews available missions
+3. Clicks **Plan Mission** on desired mission
+4. Sidebar switches to team assembly screen (not shown in mockup)
+5. Selects 3-6 heroes from roster
+6. Equips gear and consumables
+7. Clicks **Launch** button
+8. **Active Mission Panel** appears
+9. Player continues base management while monitoring status
+
+---
+
+## Technical Implementation Notes
+
+### React Component Structure
+
+The mockup is built as a single React component with:
+- `useState` hooks for interactive state (tabs, layer, speed, pause)
+- Conditional rendering for active mission panel
+- Responsive grid layouts for building categories
+- Scroll containers for long lists (layers, buildings, personnel)
+
+### Scalability Considerations
+
+1. **Dynamic List Rendering**: Mission, building, and unit lists should map from data arrays, not hardcoded
+2. **Component Reusability**: Resource indicators, progress bars, and buttons should be separate components
+3. **State Management**: Production version should use context or state management library
+4. **Performance**: Viewport rendering needs optimization for large bases (culling, layer-based rendering)
+
+---
+
+## Future Enhancements (Not in Mockup)
+
+### Planned Features
+- Tooltips on hover for all buildings and controls
+- Notification queue for alerts
+- Detailed building info panel on selection
+- Tech tree visualization in research tab
+- Hero equipment loadout screen
+- Mission debrief screen
+- Base statistics overlay
+- Tutorial indicators and highlights
+
+### Potential Additions
+- Keyboard shortcut reference overlay
+- Custom hotkey configuration
+- Multiple minimap modes (terrain, power grid, security)
+- Picture-in-picture for active missions
+- Alert history log
+- Performance metrics (FPS, unit count)
+
+---
+
+## Conclusion
+
+The Deep Command UI successfully balances complexity with usability. The multi-layer navigation system is intuitive through redundant controls (full navigator, quick navigator, keyboard). Critical information is always visible while detailed controls are organized into logical categories. The interface supports the game's core pillars: base building, personnel management, mission planning, and research progression.
+
+The design emphasizes **indirect control** (monitoring rather than micromanaging), **strategic depth** (multiple interconnected systems), and **spatial complexity** (vertical layer management). Every UI element serves the player's need to understand their base's state and make informed decisions about expansion, resource allocation, and mission deployment.
