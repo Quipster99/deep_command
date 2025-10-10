@@ -1,0 +1,1019 @@
+# Deep Command - Design Gaps & Open Questions
+## Analysis of Documentation Completeness
+
+**Document Version**: 1.0  
+**Date**: October 10, 2025  
+**Status**: Pre-Implementation Review
+
+---
+
+## Executive Summary
+
+This document identifies critical gaps, unanswered questions, and areas requiring further definition in the Deep Command design documentation before implementation can proceed. Items are prioritized by their impact on core systems and development timeline.
+
+**Priority Legend**:
+- 🔴 **Critical**: Blocks implementation of core systems
+- 🟡 **High**: Needed early in development
+- 🟢 **Medium**: Can be defined during development
+- ⚪ **Low**: Polish and refinement stage
+
+---
+
+## Table of Contents
+
+1. [Critical Gaps (Block Implementation)](#critical-gaps-block-implementation)
+2. [High Priority Gaps](#high-priority-gaps)
+3. [Medium Priority Gaps](#medium-priority-gaps)
+4. [Documentation Inconsistencies](#documentation-inconsistencies)
+5. [Implementation Recommendations](#implementation-recommendations)
+
+---
+
+## Critical Gaps (Block Implementation)
+
+### 🔴 1. Excavation System Mechanics
+
+**Current State**: Mentioned as "grid-based digging" but implementation details missing.
+
+**Open Questions**:
+- **Designation System**: How do players order excavation?
+  - Tile-by-tile clicking?
+  - Area designation (drag to select region)?
+  - Auto-excavation adjacent to existing areas?
+- **Worker Behavior**: 
+  - Do workers automatically claim excavation tasks?
+  - Can players manually assign specific workers?
+  - Priority system for multiple excavation zones?
+- **Material Properties**:
+  - Soft earth, rock, reinforced stone mentioned but no multipliers
+  - What are the actual time differences? (e.g., rock = 2x time?)
+  - Do materials affect tool requirements or just time?
+- **Excavation States**:
+  - Is it instant when worker arrives, or progressive?
+  - Visual progression states needed?
+  - Can excavation be paused/resumed?
+- **Failure States**:
+  - Can excavation cause cave-ins?
+  - Structural integrity concerns? (Docs say no, but confirm)
+  - Worker injury during excavation?
+- **Equipment Requirements**:
+  - Do excavators need specific tools?
+  - Tool durability/maintenance?
+  - Upgrade path for better excavation tools?
+
+**Why This Blocks Implementation**: Core gameplay loop depends on excavation. Can't build base without knowing how digging works.
+
+**Recommendation**: Define excavation as highest priority. Create detailed specification document covering designation UI, worker task selection algorithm, and progression system.
+
+---
+
+### 🔴 2. Elevator Implementation Details
+
+**Current State**: Described as "primary vertical transportation" but physical and mechanical details undefined.
+
+**Open Questions**:
+
+#### Physical Properties
+- **Size**: "1-tile or multi-tile (exact size TBD)"
+  - This fundamentally affects base layout planning
+  - Suggestion: 1x1 for simplicity, 2x2 for visual prominence
+- **Visual Design**:
+  - Single shaft with moving platform?
+  - Multiple cars in one shaft?
+  - External vs. internal design?
+- **Placement Grid**:
+  - Snaps to tile grid or free placement?
+  - Can elevators share tiles with other objects?
+
+#### Functional Mechanics
+- **Capacity System**:
+  - How many units can board simultaneously?
+  - Queue behavior when at capacity?
+  - Priority system (heroes vs. minions)?
+- **Travel Time**:
+  - Constant time per layer?
+  - Scales with distance (1 layer = 2s, 5 layers = 10s)?
+  - Loading/unloading time?
+- **Pathfinding Integration**:
+  - How does A* algorithm find elevator routes?
+  - Cost calculation for using elevators?
+  - Multiple elevator preference algorithm?
+- **Power Dependency**:
+  - Complete failure when unpowered?
+  - Emergency backup power?
+  - Manual cranks for emergency use?
+- **Failure Handling**:
+  - Units stuck in elevator during power loss?
+  - Emergency escape mechanism?
+  - Repair requirements when damaged?
+
+#### Strategic Implications
+- **Alternative Movement**:
+  - Are elevators the ONLY vertical movement method?
+  - Should emergency stairs exist as backup?
+  - Vents/shafts for stealth/emergency?
+- **Multiple Shaft Strategy**:
+  - Incentives for redundancy?
+  - Cost balance to prevent spam?
+  - Security implications (isolated sections)?
+
+**Why This Blocks Implementation**: Elevator placement is core to base design. Size and mechanics affect grid system, pathfinding, and player strategy.
+
+**Recommendation**: Define elevator size first (suggest 1x1 for MVP). Then specify capacity and travel time formulas. Document pathfinding integration points.
+
+---
+
+### 🔴 3. Power Distribution System
+
+**Current State**: "Power Generator provides energy" but distribution mechanics completely undefined.
+
+**Open Questions**:
+
+#### Distribution Model
+- **Propagation Method**:
+  - Option A: Radius-based (generator powers everything within X tiles)
+  - Option B: Wiring system (manual connections required)
+  - Option C: Abstract (generators contribute to global pool, rooms consume)
+  - Option D: Hybrid (generators have range, wires extend it)
+- **Visual Representation**:
+  - Power lines visible in game world?
+  - Overlay mode to show powered areas?
+  - Color-coding for power levels?
+- **Layer Behavior**:
+  - Does power propagate between layers?
+  - Vertical distribution through elevators?
+  - Separate grids per layer?
+
+#### Failure States
+- **Power Shortage Behavior**:
+  - Instant shutdown of all systems?
+  - Priority-based brownout (critical systems stay on)?
+  - Gradual degradation?
+- **Room-Specific Effects**:
+  - Life support fails → oxygen depletion time?
+  - Portal chamber unpowered → mission abort?
+  - Elevators unpowered → trapped personnel?
+  - Research labs → project paused or lost?
+- **Recovery Process**:
+  - Instant restoration when power returns?
+  - Reboot sequence?
+  - Damage requiring repair?
+
+#### Storage and Management
+- **Battery Reserve System**:
+  - How much storage?
+  - Auto-backup or manual activation?
+  - Discharge rate during outage?
+  - Recharge time?
+- **Consumption Calculation**:
+  - Per-room base cost?
+  - Active operation costs (e.g., portal only when in use)?
+  - Worker presence multiplier?
+- **Expansion Strategy**:
+  - Can you over-build power capacity?
+  - Penalties for excess capacity (maintenance costs)?
+  - Upgrade paths for generators?
+
+**Why This Blocks Implementation**: Every building references "power requirement" but no system exists to manage it. Can't implement buildings without power system.
+
+**Recommendation**: Choose distribution model based on desired complexity. Suggest Option C (abstract global pool) for MVP, with Option D (radius + wires) for full release.
+
+---
+
+### 🔴 4. Resource Delivery Mechanics
+
+**Current State**: Supplies, food, medical, and ammunition described as "delivered from surface" but no delivery mechanics defined.
+
+**Open Questions**:
+
+#### Delivery System
+- **Trigger Mechanism**:
+  - Automatic scheduled deliveries (every X game days)?
+  - Manual ordering by player?
+  - Auto-order when below threshold?
+  - Budget-based allocation?
+- **Currency System**:
+  - Is there money/credits?
+  - Or purely time-gated (free deliveries on schedule)?
+  - Mission rewards = currency for procurement?
+- **Delivery Point**:
+  - Where do resources arrive?
+  - Specific receiving room required?
+  - Automatically distributed to storage?
+  - Manual hauling by workers needed?
+- **Delivery Time**:
+  - Instant arrival?
+  - Transit time from surface?
+  - Advance notice before arrival?
+
+#### Storage System
+- **Storage Capacity**:
+  - Global pool with maximum?
+  - Per-room storage (require storage rooms)?
+  - Unlimited with diminishing returns?
+- **Storage Room Mechanics**:
+  - If required, how does "Quarters" capacity work differently from generic storage?
+  - Specialized storage for different resource types?
+  - Security implications (theft/sabotage)?
+- **Resource Location**:
+  - Can resources be stored anywhere?
+  - Must be transported to point of use?
+  - Abstract "available to all" system?
+
+#### Supply Chain Disruption
+- **Interruption Scenarios**:
+  - Can surface supply lines be cut (story events)?
+  - Enemy interference?
+  - Political/budget reasons?
+- **Contingency Planning**:
+  - Stockpiling strategy?
+  - Alternative acquisition (portal trade)?
+  - Rationing system during shortage?
+- **Spoilage and Decay**:
+  - Do food supplies expire?
+  - Medical supplies degrade?
+  - Time limits on stored resources?
+
+#### Exotic Materials
+- **Unique Acquisition**:
+  - Only from portal missions (confirmed)
+  - Processing/refinement required?
+  - Storage requirements different from standard resources?
+- **Usage**:
+  - Direct building material?
+  - Research input?
+  - Trade commodity?
+
+**Why This Blocks Implementation**: Resource system is fundamental. UI shows resource counts but no backend system. Can't implement construction costs or consumption without delivery mechanics.
+
+**Recommendation**: Start with simple scheduled automatic deliveries and abstract storage. Expand to manual ordering and capacity limits in later iterations.
+
+---
+
+### 🔴 5. Mission Decision System
+
+**Current State**: "Decision points" mentioned as core feature but implementation completely undefined.
+
+**Open Questions**:
+
+#### Decision Generation
+- **Frequency**:
+  - Time-based intervals (every 5 minutes)?
+  - Event-driven (reaching locations, encounters)?
+  - Scripted story moments?
+  - Random chance per mission segment?
+- **Difficulty Scaling**:
+  - More decisions in higher difficulty missions?
+  - Decision complexity increases with mission progress?
+- **Information Quality**:
+  - Does intel level affect decision clarity?
+  - Partial information vs. full context?
+  - False information possible?
+
+#### Decision Mechanics
+- **Option Generation**:
+  - Always binary choices?
+  - Multi-option decisions (3-5 choices)?
+  - "Do nothing" always an option?
+- **Consequence Resolution**:
+  - Dice rolls vs. deterministic outcomes?
+  - Hero skill checks influence results?
+  - Team composition matters?
+  - Equipment affects options available?
+- **Feedback**:
+  - Immediate result shown?
+  - Delayed consequences revealed later?
+  - Hidden consequences (unknown until mission ends)?
+
+#### Time Pressure
+- **Decision Urgency**:
+  - Are decisions timed?
+  - What happens on timeout (auto-choose, failure)?
+  - Visual countdown?
+- **Mission Continuation**:
+  - Does game pause during decisions?
+  - Can base management continue?
+  - Multiple simultaneous mission decisions?
+
+#### Impact Scope
+- **Mission Outcomes**:
+  - Binary success/fail or graduated results?
+  - Partial objective completion?
+  - Unexpected bonuses from good decisions?
+- **Hero Consequences**:
+  - Injury/death possible from decisions?
+  - Relationship changes from disagreements?
+  - Experience/skill gains from decisions?
+- **Long-Term Effects**:
+  - Faction reputation changes?
+  - Story branching?
+  - Future mission availability?
+
+**Why This Blocks Implementation**: Missions are described as core gameplay loop differentiator. Can't build mission system without decision framework.
+
+**Recommendation**: Create decision point specification with templates for common scenarios. Design outcome resolution system (suggest skill check + RNG for interesting unpredictability).
+
+---
+
+## High Priority Gaps
+
+### 🟡 6. Combat and Security System
+
+**Current State**: Multiple references to "guards," "base defense," and "security" but almost no mechanics defined.
+
+**Critical Missing Elements**:
+
+#### Base Defense
+- **Threat Types**:
+  - What attacks the base? (Aliens? Enemy factions? Wildlife?)
+  - Frequency of attacks?
+  - Escalation pattern?
+  - Warning system before attack?
+- **Entry Points**:
+  - Can enemies enter through any excavated tile?
+  - Only through surface?
+  - Portal backflow events?
+  - Saboteurs spawning internally?
+- **Combat Resolution**:
+  - Real-time or abstracted?
+  - Guard stats vs. enemy stats?
+  - Casualties and damage?
+
+#### Guard Behavior
+- **Patrol System**:
+  - Automatic patrol routes?
+  - Player-defined waypoints?
+  - Smart AI (guards go to threats)?
+  - Station-based (guards stay in security office)?
+- **Engagement Rules**:
+  - Automatic combat on detection?
+  - Player approval required?
+  - Flee/fight threshold based on odds?
+- **Equipment**:
+  - Do guards need weapons from armory?
+  - Armor/gear requirements?
+  - Equipment quality affects combat?
+
+#### Building Damage
+- **Destructibility**:
+  - Can rooms be destroyed in combat?
+  - Partial damage vs. total loss?
+  - Repair costs and time?
+- **Functional Impact**:
+  - Damaged rooms still operate?
+  - Power/life support damage cascades?
+  - Personnel casualties from room destruction?
+
+#### Security Infrastructure
+- **Defensive Buildings**:
+  - How do "Automated Defenses" work?
+  - Turret placement rules?
+  - Force field mechanics?
+  - Sensor/detection systems?
+- **Security Office Function**:
+  - Provides alert visibility?
+  - Command post for guard coordination?
+  - Required for defense to work?
+
+**Why This Is High Priority**: Security affects base survivability. Defense missions may be mid-game content, but system must be designed early.
+
+**Recommendation**: Define basic threat model and guard behavior for MVP. Expand with advanced defense mechanics in later phases.
+
+---
+
+### 🟡 7. Hero System Details
+
+**Current State**: Hero classes and attributes defined, but many practical aspects missing.
+
+**Open Questions**:
+
+#### Roster Management
+- **Starting Roster**:
+  - How many heroes at game start?
+  - Pre-generated characters or random?
+  - Player choice in initial team composition?
+- **Recruitment**:
+  - How do you get new heroes?
+  - Fixed story events?
+  - Recruitment building?
+  - Mission rewards?
+  - Random arrivals?
+- **Maximum Capacity**:
+  - Hard cap on total heroes?
+  - Soft cap (cost per additional hero)?
+  - Quarters capacity limits hero count?
+
+#### Progression Details
+- **Experience System**:
+  - XP per mission action or completion bonus?
+  - Level-up thresholds (linear or exponential)?
+  - Max level (20 mentioned, confirm)?
+- **Skill Point Allocation**:
+  - Points per level?
+  - Can skills decrease or only increase?
+  - Respec option?
+  - Skill caps per level?
+- **Training Facilities**:
+  - Does Training Room accelerate progression?
+  - Can heroes train between missions?
+  - Training costs and time requirements?
+
+#### Persistence and Loss
+- **Permadeath**:
+  - Optional setting or core design?
+  - Difficulty mode selector?
+  - Consequences of hero death (roster pressure)?
+- **Injury Recovery**:
+  - Healing time formula?
+  - Medical Bay capacity limits?
+  - Permanent injuries possible?
+- **Trauma System**:
+  - Psychological effects from missions?
+  - PTSD-like mechanics?
+  - Recovery methods?
+
+#### Relationships
+- **Mechanical Effects**:
+  - Do relationships provide stat bonuses?
+  - Team synergy bonuses?
+  - Negative effects from conflicts?
+- **Relationship Development**:
+  - Automatic based on shared missions?
+  - Player-influenced through choices?
+  - Events triggered by relationship levels?
+
+#### Equipment System
+- **Acquisition**:
+  - Found on missions?
+  - Crafted from research?
+  - Purchased with resources?
+- **Durability**:
+  - Does equipment degrade?
+  - Maintenance requirements?
+  - Permanent loss on mission failure?
+- **Rarity and Power**:
+  - Tier system (common/rare/legendary)?
+  - Upgrade paths?
+  - Set bonuses?
+
+**Why This Is High Priority**: Heroes are player's primary investment. Unclear progression could frustrate players. Recruitment pipeline must be balanced with difficulty.
+
+**Recommendation**: Design complete hero lifecycle (recruitment → training → mission → recovery → retirement/death). Balance roster growth rate with mission difficulty curve.
+
+---
+
+### 🟡 8. Minion Behavior and Management
+
+**Current State**: Types defined, autonomous behavior mentioned, but task system details missing.
+
+**Open Questions**:
+
+#### Task Assignment
+- **Priority Algorithm**:
+  - How do minions choose tasks from available queue?
+  - Proximity-based (nearest task)?
+  - Skill-matched (best qualified)?
+  - Priority tags (critical first)?
+  - Personal preferences based on morale?
+- **Manual Override**:
+  - Can players force-assign specific minion to task?
+  - Temporary or permanent assignment?
+  - Consequences of forced assignment (morale)?
+- **Task Types**:
+  - Construction
+  - Maintenance
+  - Operation (lab work, generator oversight)
+  - Hauling
+  - Cleaning/morale tasks?
+  - What else?
+
+#### Workforce Management
+- **Recruitment**:
+  - How do you get more minions?
+  - Automatic population growth?
+  - Recruitment room/event required?
+  - Cost per minion?
+- **Population Cap**:
+  - Quarters capacity = max minions?
+  - Soft cap (efficiency loss) or hard cap?
+  - Food consumption limits population?
+- **Specialization**:
+  - Are minions locked to type (worker/technician/etc.)?
+  - Can they be retrained?
+  - Skill progression for minions?
+
+#### Shift System
+- **24/7 Operations**:
+  - Do minions work in shifts?
+  - Player-defined schedules or automatic?
+  - Night shift efficiency penalties?
+- **Rest Requirements**:
+  - Sleep needs?
+  - Break rooms/cafeteria visits?
+  - Fatigue mechanic?
+- **Coverage Problems**:
+  - What if insufficient staff for 24/7 coverage?
+  - Critical system shutdowns?
+  - Player notification?
+
+#### Morale System
+- **Morale Factors**:
+  - Base factors: food, quarters quality, workload
+  - Events: deaths, attacks, mission failures
+  - Positive factors: recreation, success, bonuses
+- **Low Morale Consequences**:
+  - Efficiency reduction (quantified how much)?
+  - Work refusal/strikes?
+  - Desertion?
+  - Sabotage?
+- **Morale Recovery**:
+  - Time-based healing?
+  - Cafeteria/recreation benefits?
+  - Player actions (speeches, bonuses)?
+
+#### Death and Replacement
+- **Minion Mortality**:
+  - Can minions die?
+  - From what causes (combat, accidents, life support)?
+  - Permanent loss or respawn?
+- **Impact of Losses**:
+  - Morale penalty to survivors?
+  - Skill/experience lost?
+  - Replacement recruitment time?
+
+**Why This Is High Priority**: Minions are the workforce that makes everything function. Autonomous behavior must be predictable enough that players can plan, but not micromanagement-heavy.
+
+**Recommendation**: Design simple task priority system for MVP (proximity + priority tags). Expand with skill matching and preferences in later iterations. Define morale threshold effects clearly.
+
+---
+
+### 🟡 9. Life Support System
+
+**Current State**: Listed as essential infrastructure but implementation undefined.
+
+**Open Questions**:
+
+#### Distribution Method
+- **Coverage Model**:
+  - Radius from Life Support rooms?
+  - Abstract (global once built)?
+  - Per-room requirement?
+  - Oxygen/atmosphere pipes?
+- **Visual Feedback**:
+  - How do players see which areas are covered?
+  - Overlay mode?
+  - Color tint on uncovered areas?
+  - Warning indicators?
+
+#### Failure Consequences
+- **Grace Period**:
+  - Instant death when life support fails?
+  - Countdown timer before danger?
+  - How long can personnel survive?
+- **Health Effects**:
+  - Gradual health drain?
+  - Sudden incapacitation?
+  - Permanent damage if too long?
+- **Evacuation**:
+  - Do personnel automatically flee unpowered areas?
+  - Need player order to evacuate?
+  - Pathfinding to safe zones?
+
+#### Capacity and Scaling
+- **Coverage Limits**:
+  - Does one Life Support room cover entire base?
+  - Multiple rooms needed for large bases?
+  - Capacity measured in rooms or personnel?
+- **Redundancy**:
+  - Benefits of multiple Life Support systems?
+  - Backup power integration?
+  - Isolated section survivability?
+
+#### Environmental Variations
+- **Layer Differences**:
+  - Do deeper layers have different requirements?
+  - Higher power cost at depth?
+  - Temperature regulation at different layers?
+- **Room Types**:
+  - Do some rooms need special atmospheres?
+  - Containment rooms with isolated environments?
+  - Greenhouse with different atmospheric mix?
+
+**Why This Is High Priority**: Life Support is positioned as critical infrastructure. Failure must have clear, understandable consequences. System must be simple enough to manage but threatening enough to matter.
+
+**Recommendation**: Start with abstract "global coverage once built" for MVP. Add radius-based or room-specific requirements if more strategic depth needed.
+
+---
+
+### 🟡 10. Research Mechanics
+
+**Current State**: Tech tree structure defined, but research execution details missing.
+
+**Open Questions**:
+
+#### Research Execution
+- **Failure Possibility**:
+  - Can research projects fail?
+  - Partial progress lost or total loss?
+  - Consequences (damaged lab, injured scientists)?
+  - Retry allowed or tech locked out?
+- **Breakthrough System**:
+  - Random chance for breakthrough?
+  - Skill-based (higher scientist skill = better chance)?
+  - Triggered by events/discoveries?
+  - Benefits (skip tiers, bonus tech, faster completion)?
+- **Multiple Lab Benefits**:
+  - Can multiple labs work on one project?
+  - Parallel research on different projects?
+  - Efficiency bonus from specialized labs?
+
+#### Resource Requirements
+- **Artifact Consumption**:
+  - Are artifacts consumed when used for research?
+  - Or studied indefinitely (permanent library)?
+  - Rare artifacts as one-time-use vs. common as permanent?
+- **Resource Costs**:
+  - Do research projects consume supplies?
+  - Exotic materials required for advanced tech?
+  - Ongoing costs or one-time?
+- **Scientist Allocation**:
+  - How many scientists per project?
+  - Can scientists multi-task?
+  - Diminishing returns on too many scientists?
+
+#### Progress and Time
+- **Progress Calculation**:
+  - Scientist skill affects speed (formula)?
+  - Equipment quality bonuses?
+  - Morale effects on research speed?
+- **Interruption Handling**:
+  - Can research be paused and resumed?
+  - Progress lost during interruption?
+  - Consequences of reassigning scientists mid-project?
+- **Time Estimates**:
+  - Are displayed times accurate predictions?
+  - Variability based on scientist performance?
+  - Player notification when nearly complete?
+
+#### Ethical Choices
+- **Specific Scenarios**:
+  - Human experimentation options?
+  - Dangerous technology warnings?
+  - Moral consequences tracked?
+- **Mechanical Effects**:
+  - Does choosing unethical research have gameplay effects?
+  - Morale penalties?
+  - Faction reputation changes?
+  - Alternative tech paths based on ethics?
+
+**Why This Is High Priority**: Research drives long-term progression and unlocks new capabilities. Must be engaging without being tedious. Ethical choices need meaningful consequences.
+
+**Recommendation**: Define research speed formula clearly. Design breakthrough system with both random and skill factors. Create 3-5 concrete ethical dilemma scenarios with clear branching paths.
+
+---
+
+## Medium Priority Gaps
+
+### 🟢 11. Pathfinding Edge Cases
+
+**Current State**: A* mentioned, elevator-aware routing described, but edge cases undefined.
+
+**Questions**:
+- **Diagonal Movement**: Allowed? Cost same as cardinal movement or sqrt(2)?
+- **Elevator Queues**: How does pathfinding handle multiple units wanting same elevator?
+- **Multi-Unit Collision**: Do units block each other or phase through?
+- **Emergency Evacuation**: Does pathfinding prioritize safety during life support failure?
+- **Dynamic Obstacles**: Construction sites block paths? Damaged rooms?
+- **Multi-Layer Paths**: How does algorithm weight vertical movement vs. horizontal distance?
+
+**Recommendation**: Test with prototype and define behavior based on emergent issues.
+
+---
+
+### 🟢 12. Grid and Building Details
+
+**Questions**:
+- **Room Rotation**: Can buildings be rotated during placement?
+- **Non-Rectangular Rooms**: L-shapes or irregular rooms possible?
+- **Doorway System**: Explicit door placement or automatic connections?
+- **Overlapping Layers**: Can buildings on Layer 0 occupy same tile as Layer -1 building?
+- **Half-Tiles**: Rooms require integer tile dimensions or fractional possible?
+- **Elevation Details**: Do rooms have floor/ceiling that interact with layers above/below?
+
+**Recommendation**: Start with rectangular rooms only, no rotation, for MVP. Expand if needed.
+
+---
+
+### 🟢 13. Economic Model
+
+**Questions**:
+- **Currency Existence**: Is there a money/credit system or just resources?
+- **Budget System**: Are supplies purchased with budget or time-gated deliveries?
+- **Portal Trade**: Can you trade with aliens for resources?
+- **Exotic Material Value**: Can exotic materials be sold/traded?
+- **Mission Rewards**: Do missions provide currency or just artifacts/materials?
+- **Operating Costs**: Ongoing costs for personnel, power, etc.?
+
+**Recommendation**: Define whether currency exists before implementing resource delivery system.
+
+---
+
+### 🟢 14. Progression Structure
+
+**Questions**:
+- **Layer Unlocking**: What unlocks deeper layers? Research? Story? Just excavation?
+- **Building Progression**: Which buildings available at start? Unlock order?
+- **Campaign Structure**: Linear missions or open-ended sandbox?
+- **Victory Conditions**: What ends the game? Final mission? Research completion? Score threshold?
+- **Loss Conditions**: Can you lose? How? (Total base destruction? Economic collapse? Story failure?)
+- **New Game Plus**: Post-victory options? Endless mode transitions?
+
+**Recommendation**: Define victory/loss conditions early as they affect design philosophy. Campaign structure can evolve.
+
+---
+
+### 🟢 15. Tutorial and Onboarding
+
+**Current State**: Completely unaddressed.
+
+**Critical Questions**:
+- **Tutorial Structure**: Guided missions? Interactive tooltips? Separate tutorial mode?
+- **Feature Gating**: Are advanced features locked initially and progressively revealed?
+- **First-Time User Experience**: How does game teach multi-layer navigation?
+- **Complexity Curve**: What order are systems introduced?
+- **Help System**: In-game encyclopedia? Context-sensitive help?
+- **Difficulty Scaling**: Does tutorial difficulty match campaign?
+
+**Recommendation**: Design tutorial as high priority item. Complex games need strong onboarding. Consider progressive feature unlocking to avoid overwhelming new players.
+
+---
+
+### 🟢 16. Content Volume Targets
+
+**Questions**:
+- **Mission Types**: How many unique mission templates? (10? 50? 100?)
+- **Building Variety**: Total number of building types by launch?
+- **Hero Classes**: Final class count? (6 mentioned, is that final?)
+- **Tech Tree Size**: How many technologies total? Per category?
+- **Random Events**: Pool size for mission and base events?
+- **Alien Species**: How many factions/species to design?
+- **Equipment Items**: Total weapons, armor, tools, consumables?
+
+**Recommendation**: Set content targets to guide art and design team workload. Ensure targets align with development timeline.
+
+---
+
+### 🟢 17. Save/Load System
+
+**Questions**:
+- **Save Format**: Binary or text-based (JSON)?
+- **Autosave Frequency**: Every X minutes? On major events?
+- **Mid-Mission Saving**: Can you save during active missions?
+- **Save Slots**: How many? Cloud sync?
+- **Corruption Handling**: Backup saves? Error recovery?
+- **Version Compatibility**: How to handle saves across game updates?
+- **Data Volume**: Estimate save file size for performance planning?
+
+**Recommendation**: Design save system architecture early to ensure all game state is serializable.
+
+---
+
+### 🟢 18. UI Interaction Details
+
+**Questions**:
+- **Building Cancellation**: Refund policy? Full refund, partial, none?
+- **Order Queuing**: Can players queue multiple commands? Shift-click?
+- **Multi-Select**: Select multiple units at once?
+- **Undo System**: Can placement mistakes be undone?
+- **Hotkeys**: Full keyboard shortcut scheme?
+- **Mouse Gestures**: Edge scrolling speed? Click-drag sensitivity?
+
+**Recommendation**: Define cancellation policy before implementing building system. Other details can be refined during alpha testing.
+
+---
+
+### 🟢 19. Performance Budgets
+
+**Questions**:
+- **Max Units per Layer**: Performance target? 50? 100? 500?
+- **Max Buildings per Layer**: Realistic base size limit?
+- **Total Layers Rendered**: How many layers visible/processed simultaneously?
+- **Particle Effect Limits**: Max concurrent particle systems?
+- **Pathfinding Budget**: Max path recalculations per frame?
+- **Draw Call Budget**: Target for rendering optimization?
+- **Memory Target**: Max RAM usage?
+
+**Recommendation**: Set performance targets early to guide optimization priorities. Adjust based on profiling.
+
+---
+
+### 🟢 20. Time Scale
+
+**Questions**:
+- **Real-Time to Game-Time**: 1 real minute = ? game minutes?
+- **Day/Night Cycle**: Does time of day affect gameplay?
+- **Long-Term Time**: Do months/years matter?
+- **Personnel Aging**: Do minions/heroes age over time?
+- **Resource Consumption**: Per real-time or game-time?
+- **Mission Duration**: Real-time or can be accelerated with game speed?
+
+**Recommendation**: Define time scale to calibrate all time-based systems (construction, research, consumption, mission duration).
+
+---
+
+## Documentation Inconsistencies
+
+### ⚠️ Issues Requiring Clarification
+
+1. **Layer Count Discrepancy**
+   - **NodeStructure.md**: Shows 20 layers (0 to -19)
+   - **GDD**: States "10-20 layers"
+   - **Resolution Needed**: Final layer count for implementation?
+
+2. **Support Beams Description**
+   - **GDD**: "Support beams and ventilation are purely decorative, automatically placed as part of room construction"
+   - **GDD (Excavation)**: Mentions support beams as part of excavation system
+   - **Resolution Needed**: Are beams part of excavation or building? Both? Neither?
+
+3. **Hero Control Context**
+   - **Missions**: Described as "indirect control" during away missions
+   - **Base Management**: Heroes appear in personnel list and base scenes
+   - **Resolution Needed**: Can players control heroes when in base? Or only assign to missions?
+
+4. **Elevator Shaft Rendering**
+   - **NodeStructure**: "ElevatorShaftRenderer" node draws connections
+   - **Building Template**: Each elevator has "ShaftStructure" visual
+   - **Resolution Needed**: Who renders the shaft? Per-elevator or global system?
+
+5. **Room Size Requirements**
+   - **GDD**: "Rooms require minimum dimensions (varies by type)"
+   - **No Specification**: Actual minimum dimensions never defined
+   - **Resolution Needed**: Create table of min/max sizes per building type
+
+---
+
+## Implementation Recommendations
+
+### Phase 1: Pre-Production (Immediate)
+
+**Must Define Before Coding**:
+1. ✅ Excavation designation and execution system
+2. ✅ Elevator size and capacity mechanics
+3. ✅ Power distribution model
+4. ✅ Resource delivery and storage system
+5. ✅ Mission decision framework
+
+**Deliverables**:
+- Detailed specification documents for each system
+- Algorithm pseudocode for core mechanics
+- UI mockups for new interactions
+- Revised GDD with answers to critical questions
+
+### Phase 2: Prototype Development
+
+**Define During Implementation**:
+1. Combat/security mechanics basics
+2. Hero recruitment pipeline
+3. Victory and loss conditions
+4. Basic tutorial structure
+5. Performance budgets and targets
+
+**Validation Goals**:
+- Test excavation workflow with players
+- Validate elevator placement feels intuitive
+- Confirm power system is understandable
+- Ensure mission decisions are engaging
+
+### Phase 3: Alpha Development
+
+**Refine During Content Creation**:
+1. Complete content volume targets
+2. Finalize all building types
+3. Complete tech tree
+4. Design all mission templates
+5. Implement complete tutorial
+
+**Iteration Focus**:
+- Balance resource consumption rates
+- Tune research times
+- Adjust difficulty curve
+- Polish UI interactions
+
+### Phase 4: Beta and Polish
+
+**Final Definitions**:
+1. Advanced UI features
+2. Audio design specifics
+3. Modding API (if planned)
+4. Post-launch content roadmap
+
+---
+
+## Priority Action Items
+
+### This Week
+1. [ ] Schedule design meeting to address Critical Gaps (1-5)
+2. [ ] Assign owners for each critical system specification
+3. [ ] Create detailed spec template
+4. [ ] Set deadline for specification completion
+
+### Next Week
+1. [ ] Review and approve all critical system specifications
+2. [ ] Begin prototyping excavation and elevator systems
+3. [ ] Start technical design for power distribution
+4. [ ] Draft resource delivery implementation plan
+
+### Month 1
+1. [ ] Complete all Critical and High Priority definitions
+2. [ ] Begin implementation of core systems
+3. [ ] Create vertical slice demonstrating multi-layer gameplay
+4. [ ] Playtest excavation and building mechanics
+
+---
+
+## Appendix: Questions by System
+
+### Grid System
+- Diagonal movement rules
+- Tile occupancy rules (one building per tile?)
+- Collision handling
+- Layer interaction rules
+
+### Layer System
+- Final layer count (10, 15, or 20?)
+- Unlocking mechanism
+- Visual rendering rules
+- Layer transition animation speed
+
+### Building System
+- Room rotation
+- Non-rectangular rooms
+- Doorway placement
+- Cancellation refund policy
+- Construction animation style
+
+### Unit System (Minions)
+- Population cap mechanics
+- Recruitment method
+- Death and replacement
+- Task priority algorithm
+- Shift scheduling
+
+### Unit System (Heroes)
+- Starting roster size
+- Recruitment method
+- Max hero capacity
+- Training mechanics
+- Equipment durability
+
+### Power System
+- Distribution model choice
+- Failure behavior
+- Battery capacity
+- Visual representation
+
+### Life Support System
+- Coverage model
+- Failure grace period
+- Visual indicators
+- Capacity scaling
+
+### Resource System
+- Delivery mechanism
+- Currency existence
+- Storage capacity
+- Spoilage rules
+
+### Mission System
+- Decision frequency
+- Consequence resolution
+- Time pressure mechanics
+- Success/failure criteria
+- Post-mission rewards
+
+### Research System
+- Failure possibility
+- Breakthrough mechanics
+- Multi-lab benefits
+- Artifact consumption
+- Progress formula
+
+### Combat System
+- Threat types and frequency
+- Guard AI behavior
+- Combat resolution method
+- Building damage rules
+- Defense building mechanics
+
+### Progression System
+- Victory conditions
+- Loss conditions
+- Campaign structure
+- Building unlock order
+- Layer unlocking
+
+---
+
+**Document Maintainer**: Design Team  
+**Next Review**: After critical gaps addressed  
+**Distribution**: All development team members
