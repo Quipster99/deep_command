@@ -14,9 +14,9 @@ The Deep Command UI is designed around a multi-layer base management interface w
 The interface is divided into five primary zones:
 
 1. **Top Left**: Minimap and Layer Navigator
-2. **Top Right**: Command Sidebar (Primary Interaction)
+2. **Right**: Command Sidebar (Primary Interaction)
 3. **Center**: Main Viewport (Game World)
-4. **Top Right Secondary**: Active Mission Panel (Contextual)
+4. **Right Secondary**: Active Mission Panel (Contextual)
 5. **Bottom**: Status Bar and Controls
 
 ---
