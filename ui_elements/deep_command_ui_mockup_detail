@@ -70,6 +70,7 @@ The minimap is always visible to maintain spatial awareness in the complex multi
 - **Total Count**: 20 buttons (Surface to Layer -19)
 - **Surface (Layer 0)**: Labeled as "Surface" for clarity
 - **Underground Layers**: Labeled as "L -1", "L -2", etc.
+- **Display**: Always shows numbers only (names appear in current layer indicators)
 
 #### Visual States
 
@@ -91,13 +92,34 @@ The minimap is always visible to maintain spatial awareness in the complex multi
 
 ### Interaction
 
-- **Click**: Jump directly to selected layer
+- **Left Click**: Jump directly to selected layer
+- **Right Click**: Opens context menu with options:
+  - Jump to Layer (same as left click)
+  - Name Layer... (opens naming dialog)
+  - Clear Name (removes custom name)
+  - Add Note... (for future implementation)
 - **Scroll**: Navigate through all 20 layers
 - **Visual Feedback**: Color intensity indicates proximity to current layer
+
+### Layer Naming System
+
+Players can assign custom names to layers for organization:
+
+- **Naming Dialog**: Enter up to 20 characters for a layer name
+- **Display Location**: Names appear in current layer indicators (bottom bar, minimap header), NOT in the layer navigator
+- **Format**: "[L -3] Medical Lab" or "[Surface] Command Center"
+- **Optional**: Unnamed layers simply display as "Layer -3" or "Surface"
+- **Purpose**: Memory aid and organization without cluttering the vertical navigator
+
+**Example Current Layer Display:**
+- With name: "↑ [L -5] Research Wing ↓"
+- Without name: "↑ Layer -5 ↓"
 
 ### Design Rationale
 
 The layer navigator provides immediate access to any level of the base. The visual hierarchy (bright to dim) helps players understand their position in the vertical space. This is crucial because players will frequently need to move between layers to manage different areas of their base.
+
+Keeping numbers-only in the navigator maintains spatial awareness and compact UI, while custom names appear contextually when you're on that layer—providing organization without clutter.
 
 ---
 
