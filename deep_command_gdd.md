@@ -327,7 +327,7 @@ The elevator is the primary vertical transportation mechanism, allowing personne
 - **Rendering Layers**: Z-coordinate based system
 - **Total Layers**: 10-20 uniform layers
 - **Layer Transition**: Smooth camera movement between levels
-- **Visibility Rules**: X-ray vision for current layer, ghosted view for adjacent
+- **Visibility Rules**: One layer rendered at a time with decorative elements surrounding playable area
 
 #### Layer Configuration
 - **Total Layers**: 10-20 layers of uniform, undifferentiated space
