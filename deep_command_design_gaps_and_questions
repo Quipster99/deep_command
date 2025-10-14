@@ -305,6 +305,115 @@ Worker efficiency affected by skill level and morale
 
 **Recommendation**: Define elevator size first (suggest 1x1 for MVP). Then specify capacity and travel time formulas. Document pathfinding integration points.
 
+# 🔴 2.1 Elevator Implementation Details - ANSWERED
+
+## Physical Properties
+
+### Size
+**Answer**: 2x2 tiles
+- Provides visual prominence without overwhelming the grid
+- Makes elevator placement a meaningful spatial decision
+- Each elevator occupies 4 tiles per layer
+
+### Visual Design
+**Answer**: Single shaft with moving platform
+- **Design**: Floor platform with three solid walls and center-opening doors
+- **Rendering**: Only displays on the currently viewed layer (not rendered through multiple layers simultaneously)
+- **Construction**: Built by placing elevator sections at the same 2x2 location across multiple layers
+- **Visual simplicity**: Clean, functional design without decorative elements
+
+### Placement Grid
+**Answer**: Snaps to tile grid
+- Must align to even coordinates (2x2 requirement)
+- Cannot share tiles with other objects (exclusive tile occupation)
+- Requires identical 2x2 placement on each connected layer to form shaft
+
+---
+
+## Functional Mechanics
+
+### Capacity System
+**Answer**: [TBD - Needs decision]
+- **Suggested**: 4 units (1 per tile) for consistency with 2x2 size
+- **Queue behavior**: FIFO (first-in-first-out) when at capacity
+- **Priority system**: No priority initially (first-come-first-served)
+  - Enemies can board but cannot call/request elevator
+  - Heroes and minions use same queue system
+
+### Travel Time
+**Answer**: [TBD - Needs decision]
+- **Suggested formula**: 1 second per layer traveled
+- **Loading time**: [TBD] - Recommend 0.3-0.5s per passenger
+- **Total time calculation**: (layers × travel_time) + (passengers × loading_time)
+- **Example**: Moving 3 layers with 2 passengers = (3 × 1s) + (2 × 0.5s) = 4 seconds
+
+### Pathfinding Integration
+**Answer**: Treated as special node in pathfinding graph
+- **A* Integration**: Elevator entrances are connection nodes between layers
+- **Cost calculation**: Base cost + (estimated_travel_time × time_penalty_factor)
+- **Multi-elevator logic**: Pathfinding selects nearest available elevator to desired route
+- **Availability check**: Only includes elevators in "functioning" state (not player-halted)
+
+### Power Dependency
+**Answer**: Not power-dependent (always functional unless manually halted)
+- **No power requirement**: Elevators do not consume power or fail when unpowered
+- **Justification**: Prevents soft-locks and unrecoverable game states
+- **Manual control**: Player can temporarily halt elevator operation via UI control
+
+### Failure Handling
+**Answer**: Elevators cannot be destroyed or fail
+- **Damage immunity**: Indestructible by enemies or environmental hazards
+- **Player override**: Can be manually halted by player
+  - Units attempting to use halted elevator must find alternative routes (ladders)
+  - Halted status is toggleable (can be resumed anytime)
+- **No repair needed**: Cannot be damaged, no maintenance required
+
+---
+
+## Strategic Implications
+
+### Alternative Movement
+**Answer**: Ladders provide secondary vertical movement
+- **Elevators**: Fast, high-capacity, passive transport
+- **Ladders**: Slower, unit-by-unit climbing, always available
+- **Stairs**: Not implemented (design preference for simplicity)
+- **Vents/shafts**: Not implemented
+- **Justification**: Ladders provide backup without overcomplicating movement systems
+
+### Multiple Shaft Strategy
+**Answer**: Multiple elevators encouraged but not required
+- **Incentive for redundancy**: 
+  - Distribute traffic across facility
+  - Multiple defense/choke points against threats
+  - Reduced congestion during high-traffic scenarios
+- **Cost balance**: [TBD - Needs resource cost definition]
+  - Should be affordable enough to build 2-3 in medium base
+  - Expensive enough that spamming isn't optimal
+- **Security implications**:
+  - Each elevator is potential breach route from gate to surface
+  - More elevators = more routes to defend
+  - Can halt specific elevators to funnel threats into kill zones
+
+---
+
+## Implementation Summary
+
+### Construction System
+- Player builds elevator sections at identical 2x2 coordinates across desired layers
+- Sections automatically form continuous shaft when vertically aligned
+- Each section is separate build action (e.g., 5 layers = 5 build commands at same X,Y)
+
+### Enemy Interaction
+- Enemies can pathfind to and use elevators
+- Enemies cannot call/request elevator (passive use only)
+- Elevator arrives based on friendly unit requests or natural positioning
+
+### Player Controls
+- **Manual Halt**: Toggle to stop elevator operation
+  - Units cannot board or disembark while halted
+  - Halted elevators excluded from pathfinding
+- **Visual indicator**: Show elevator status (operational/halted) in UI
+
 ---
 
 ### 🔴 3. Power Distribution System
