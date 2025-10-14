@@ -196,8 +196,8 @@ Worker efficiency affected by skill level and morale
 
 ### Elevator Integration
 
-- Elevators count as valid connection points
-- Rooms and corridors can connect to elevator tiles directly
+- Elevator doors count as valid connection points
+- Rooms and corridors can connect to elevator entryway tiles directly
 - Players must build corridors from elevators to rooms on each layer
 
 ### Multi-Layer Considerations
