@@ -1018,7 +1018,326 @@ When Net Power returns to >= 0:
 
 **Why This Blocks Implementation**: Missions are described as core gameplay loop differentiator. Can't build mission system without decision framework.
 
-**Recommendation**: Create decision point specification with templates for common scenarios. Design outcome resolution system (suggest skill check + RNG for interesting unpredictability).
+# 🔴 5. Mission Decision System - ANSWERED
+
+## Decision Generation
+
+### Frequency
+**Answer**: Event-Driven (structured mission moments)
+- Decisions triggered by mission progress milestones
+- Encounter-based (team finds artifact, meets hostile force, discovers technology)
+- Structured: 2-4 decision points per mission on average
+- Predictable pacing for player
+- Scripted story moments at key junctures
+
+### Difficulty Scaling
+**Answer**: Higher stakes (same complexity, worse consequences)
+- Same number of decisions across difficulty levels
+- Higher difficulty = worse consequences for bad choices
+- Death/failure more likely on hard missions
+- Keeps decision count manageable
+- Difficulty affects outcome severity, not decision frequency
+
+### Information Quality
+**Answer**: Intel unlocks additional options
+- Low intel: 2 basic options presented
+- High intel: Additional options appear (3-4 total)
+- Better mission preparation = more strategic choices available
+- Intel gathering becomes important pre-mission activity
+- Example:
+  - **Without intel**: "Enter temple?" (Fight or Retreat)
+  - **With intel**: "Enter temple?" (Fight, Stealth Entry, Diplomatic Approach, Retreat)
+
+---
+
+## Decision Mechanics
+
+### Option Generation
+**Answer**: Variable based on situation
+- Simple decisions: 2 options (binary choice)
+- Complex decisions: 3-4 options (nuanced scenarios)
+- Scales to situation importance and intel level
+- "Do nothing" may be explicit option in some scenarios
+- Flexibility allows different decision types
+
+### Consequence Resolution
+**Answer**: Skill Checks + RNG
+- Each option has base success chance (e.g., 60%)
+- Hero skills modify chance (+10% per relevant skill level)
+- Equipment provides situational bonuses
+- Dice roll determines actual outcome
+- **Example**: "Sneak past guards" = 40% base + 20% (stealth skill 2) + 10% (cloaking device) = 70% success chance
+- Creates strategic depth while maintaining tension/uncertainty
+
+**Success Calculation Formula**:
+```
+Final Success Chance = Base Chance + (Skill Bonuses) + (Equipment Bonuses)
+Roll d100
+If roll ≤ Final Success Chance: Success
+If roll > Final Success Chance: Failure
+```
+
+### Team Composition Impact
+**Answer**: Yes, heroes and equipment matter significantly
+
+- **Hero skills**: Each hero has relevant skills (combat, science, diplomacy, stealth, engineering, medical, etc.)
+- **Skill display**: Options show required/recommended skills
+  - "Translate alien text [Science 2+]" 
+  - "Negotiate with locals [Diplomacy 1+]"
+  - "[Combat 3] - Recommended for high success chance"
+- **Equipment bonuses**: Gear provides situational bonuses
+  - Ancient artifact detector: +15% to archaeology checks
+  - Advanced weapons: +20% to combat options
+  - Medical scanner: +10% to diagnosis/treatment decisions
+- **Team synergy**: Multiple heroes with same skill stack bonuses
+  - 3 heroes with Combat 2 each = stronger combat team than 1 hero with Combat 5
+
+### Feedback
+**Answer**: Hybrid (immediate + delayed reveals)
+- **Immediate results** for straightforward decisions:
+  - "You avoided the trap" (success shown immediately)
+  - "The negotiation failed, combat begins" (clear consequence)
+- **Delayed reveals** for complex/long-term consequences:
+  - "The artifact you retrieved has unexpected properties" (revealed at mission end)
+  - "Your actions affected local faction standing" (shown in debrief)
+- Best of both worlds: satisfying immediate feedback + suspenseful reveals
+
+---
+
+## Time Pressure
+
+### Decision Urgency
+**Answer**: No time limit
+- Player takes as long as needed to decide
+- No countdown timers or forced choices
+- Encourages thoughtful, strategic decision-making
+- Better fit for base management game pacing
+- Reduces pressure/frustration
+- Base management continues while decision pending
+
+### Mission Continuation
+**Answer**: Base continues during decision pop-ups
+
+- **Game state**: Base management runs in background
+- **Mission pauses**: Mission progress halts until decision made
+- **Decision UI**: Modal/overlay shows decision without blocking base
+- **Multiple missions**: Can have multiple pending decisions from different missions
+  - Each clearly labeled with mission/team identifier
+  - Player addresses one at a time from queue
+- **Queue system**: Decisions stack if multiple arrive simultaneously
+
+---
+
+## Impact Scope
+
+### Mission Outcomes
+**Answer**: Graduated results (success spectrum)
+
+**Success Levels**:
+- **Critical Success** (90%+): Primary + bonus objectives, rare items, no casualties, reputation bonus
+- **Success** (70-89%): Primary objective complete, team returns safely, standard rewards
+- **Partial Success** (50-69%): Objective complete but casualties/setbacks, reduced rewards
+- **Failure** (30-49%): Objective failed, team returns (possibly wounded), minimal rewards
+- **Critical Failure** (<30%): Objective failed, casualties, negative consequences, reputation loss
+
+**Decision Contribution**:
+- Each decision contributes points toward success/failure
+- Good decisions: +10 to +25 points
+- Bad decisions: -10 to -25 points
+- Accumulated score determines final mission outcome tier
+- No single decision automatically fails mission (except catastrophic critical failures)
+
+### Hero Consequences
+**Answer**: Injury and death possible
+- Bad decisions can result in heroes being wounded or killed
+- **Permanent consequences**: Dead heroes do not return
+- **Injury system**: Wounded heroes out of action for recovery period
+- High stakes create careful decision-making
+- "Hero down" is serious event requiring player attention
+- **Risk indicators**: High-risk decisions clearly marked
+- Player accepts consequences of their choices
+
+**Other Hero Effects**:
+- **Experience/Skills**: Successful decisions grant XP
+  - Relevant skill usage provides bonus XP to that skill
+  - Example: Successful diplomacy check gives Diplomacy XP
+- **Equipment Loss**: Failed decisions may result in lost/damaged gear
+- **Status Effects**: Some decisions may inflict conditions (poisoned, traumatized, etc.)
+
+### Long-Term Effects
+**Answer**: Resource and intel gains (no complex branching)
+- Decisions primarily affect immediate mission rewards
+- **Resource variety**: Good decisions yield better loot/supplies
+- **Intel acquisition**: Choices determine what information is learned
+- **No faction reputation system** (simplifies for MVP)
+- **No story branching** (linear mission progression)
+- Focus on tactical decision-making, not long-term political consequences
+
+**Resource/Intel Examples**:
+- Good decision: Retrieve advanced technology, gain research data
+- Bad decision: Lose equipment, no valuable intel gathered
+- Neutral decision: Safe extraction, standard mission rewards
+
+---
+
+## Decision Templates
+
+### Combat Encounter
+**Trigger**: Hostile forces detected
+**Options**:
+- **Fight** [Combat check]
+  - Base: 60% | Bonuses: +10% per Combat level, +20% superior weapons
+  - Success: Enemies defeated, loot gained
+  - Failure: Team injured, possible casualties
+- **Sneak Past** [Stealth check]
+  - Base: 40% | Bonuses: +10% per Stealth level, +15% cloaking tech
+  - Success: Avoid combat, conserve resources
+  - Failure: Detected, forced combat at disadvantage
+- **Negotiate** [Diplomacy check] *(only with intel)*
+  - Base: 50% | Bonuses: +10% per Diplomacy level
+  - Success: Peaceful resolution, possible ally
+  - Failure: Negotiations break down, combat begins
+- **Retreat**
+  - Base: 90% (usually succeeds)
+  - Success: Safe withdrawal, mission continues with setback
+  - Failure: Pursued, must fight while retreating
+
+### Discovery
+**Trigger**: Team found ancient device/artifact
+**Options**:
+- **Take It** [Risk assessment]
+  - Base: 60% | Bonuses: +10% per Science level
+  - Success: Valuable artifact acquired
+  - Failure: Triggered trap/curse, team injured
+- **Study In Place** [Science check]
+  - Base: 70% | Bonuses: +10% per Science level, +15% scanner equipment
+  - Success: Gain intel, safe extraction of data
+  - Failure: Inconclusive, time wasted
+- **Leave It**
+  - Base: 100% (always succeeds)
+  - Success: No risk, no reward
+- **Destroy It** *(only with intel about danger)*
+  - Base: 80% | Bonuses: +10% per Engineering level
+  - Success: Threat neutralized, prevents enemy use
+  - Failure: Partial destruction, unpredictable effects
+
+### Environmental Hazard
+**Trigger**: Path blocked by obstacle (chasm, sealed door, toxic atmosphere, etc.)
+**Options**:
+- **Force Through** [Strength/Combat check]
+  - Base: 50% | Bonuses: +10% per Combat level, +20% explosives/heavy tools
+  - Success: Obstacle cleared, path open
+  - Failure: Team exhausted/injured, equipment damaged
+- **Find Alternate Route** [Exploration]
+  - Base: 70% (usually succeeds)
+  - Success: Safe bypass found
+  - Failure: Longer route, potential additional encounters
+- **Use Technology** [Science/Engineering check]
+  - Base: 60% | Bonuses: +10% per relevant skill, +15% specialized equipment
+  - Success: Clever solution, minimal risk
+  - Failure: Equipment malfunction, must try different approach
+
+### Moral Dilemma
+**Trigger**: Locals/allies request help that would delay or complicate mission
+**Options**:
+- **Help Them**
+  - Base: 80% | Bonuses: +10% per relevant skill
+  - Success: Mission delayed but ally gained, intel/resources provided
+  - Failure: Mission delayed, help insufficient, relationship damaged
+- **Refuse**
+  - Base: 100% (always succeeds tactically)
+  - Success: Mission efficiency maintained
+  - Failure: N/A (but may create future complications)
+- **Compromise**
+  - Base: 70% | Bonuses: +10% per Diplomacy level
+  - Success: Partial help, balanced outcome, relationship maintained
+  - Failure: Neither party satisfied, minor relationship damage
+
+---
+
+## Implementation Summary
+
+### Decision Flow
+```
+1. Mission progresses off-screen (team traveling/exploring)
+2. Event trigger fires (scripted milestone reached)
+3. Mission pauses (but base continues operating)
+4. Decision pop-up appears in UI
+5. Player reviews:
+   - Situation description
+   - Team composition and skills
+   - Available options (2-4 based on intel)
+   - Success chance estimates for each option
+6. Player selects option (no time pressure)
+7. System calculates outcome:
+   - Base success chance
+   - + Hero skill bonuses (sum of all relevant team skills)
+   - + Equipment bonuses
+   - = Final success percentage
+   - Roll d100
+   - Compare to final percentage
+8. Immediate result displayed:
+   - Success/failure message
+   - Direct consequences (injury, loot, intel)
+9. Mission continues to next event/completion
+10. Mission debrief shows:
+    - All decision outcomes
+    - Cumulative mission success rating
+    - Rewards earned
+    - Hero status (alive/injured/dead)
+```
+
+### Decision UI Elements
+- **Mission Identifier**: "[Alpha Team - Ruins of Kar'tek]"
+- **Situation Description**: Context, stakes, current team status
+- **Options List**: 2-4 choices with:
+  - Action description
+  - Required/recommended skills (e.g., [Combat 2+])
+  - Estimated success chance percentage
+  - Potential consequences preview
+- **Team Panel**: 
+  - Show all heroes on mission
+  - Display relevant skills and current health
+  - Highlight which heroes contribute to each option
+- **Equipment Panel**: Show gear bonuses applicable to situation
+- **Decision History**: Log of previous decisions made this mission (for context)
+
+### Success Chance Display
+**Show player transparency**:
+- "Sneak Past: 65% chance"
+  - Base: 40%
+  - Stealth Skill (Hero A: Level 2): +20%
+  - Cloaking Device: +5%
+- Clear breakdown builds trust in system
+- Player understands why chances are what they are
+
+---
+
+## Open Items Requiring Decisions
+
+### Critical (Blocks Implementation)
+1. **Base success percentages**: Define default % for each decision template
+   - Recommend: 40-70% range for most checks
+2. **Skill bonus values**: Confirm +10% per skill level
+3. **Equipment bonus values**: How much do items provide? (+5% to +25%?)
+4. **Death threshold**: At what failure severity do heroes die vs. just injured?
+   - Recommend: Critical failures (roll ≤10) = death risk, regular failures = injury
+
+### Important (Affects Balance)
+5. **Mission success thresholds**: How many points needed for each outcome tier?
+   - Example: 100+ = Critical Success, 70-99 = Success, etc.
+6. **Decision point values**: How much does each decision contribute? (+15 good, -15 bad?)
+7. **Intel acquisition**: How does player gain intel before missions?
+8. **Skill XP gains**: How much XP for successful skill checks?
+
+### Enhancement (Post-MVP)
+9. **Hero morale/relationships**: Track team dynamics?
+10. **Decision consequences log**: Can player review past mission decisions?
+11. **Difficulty multipliers**: How much do consequences scale on hard mode?
+
+---
+
+**Status**: Complete decision system framework defined with event-driven structure, skill-based resolution, and graduated outcomes. Ready for implementation pending numerical balance values.
 
 ---
 
