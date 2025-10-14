@@ -469,7 +469,160 @@ Worker efficiency affected by skill level and morale
 
 **Why This Blocks Implementation**: Every building references "power requirement" but no system exists to manage it. Can't implement buildings without power system.
 
-**Recommendation**: Choose distribution model based on desired complexity. Suggest Option C (abstract global pool) for MVP, with Option D (radius + wires) for full release.
+# 🔴 3. Power Distribution System - ANSWERED
+
+## Distribution Model
+
+### Propagation Method
+**Answer**: Option C - Abstract global pool
+- **Model**: All power generators contribute to single facility-wide power value
+- **No wiring**: No physical connections, cables, or routing required
+- **No spatial limitations**: Power available everywhere simultaneously
+- **No layer separation**: Single power grid spans entire facility (all layers)
+- **UI Display**: Global "Power" value shown in main UI (e.g., "Power: 850/1000")
+
+### Visual Representation
+**Answer**: UI-only display, no in-world visualization
+- **Main UI**: Single power meter showing Generation/Consumption ratio
+- **No power lines**: No visual wiring or connections in game world
+- **No overlay mode**: Power is abstract concept, not spatial
+- **Room indicators**: Individual rooms may show "Powered/Unpowered" status icon
+
+### Layer Behavior
+**Answer**: Single unified grid
+- Power does NOT propagate (it's already everywhere)
+- No vertical distribution needed
+- No separate grids per layer
+- All generators contribute equally regardless of layer
+- All consumers draw equally regardless of layer
+
+---
+
+## Failure States
+
+### Power Shortage Behavior
+**Answer**: Two-stage failure with backup system
+1. **Stage 1 - Backup Mode** (Net power < 0):
+   - Automatically triggers when consumption exceeds generation
+   - **Backup power source**: [TBD - Battery/Capacitor/Emergency Generator?]
+   - **Backup capacity**: [TBD - How long does backup last?]
+   - **Visual warning**: UI indicator shows "BACKUP MODE" with timer/meter
+   
+2. **Stage 2 - Total Shutdown** (Backup depleted):
+   - All systems shut off simultaneously
+   - Remains offline until power restored
+   - **Recovery**: Instant restoration when generation exceeds consumption
+
+### Room-Specific Effects
+**Answer**: Each room type has unique power loss behavior
+- **Examples** (specific effects TBD per room type):
+  - **Life Support**: Oxygen depletion countdown starts
+  - **Portal Chamber**: Cannot dial gate, active connection severed
+  - **Elevators**: [EXCEPTION - Per elevator doc, these remain functional]
+  - **Research Labs**: Progress paused (not lost)
+  - **Security Systems**: Doors fail to sealed/open state, alarms offline
+  - **Lighting**: Facility goes dark (visibility reduction)
+  
+**Implementation Note**: Each room definition will specify `onPowerLoss()` and `onPowerRestored()` behaviors
+
+### Recovery Process
+**Answer**: Instant restoration
+- When power generation > consumption, all systems instantly reactivate
+- No reboot sequence
+- No gradual restoration
+- No damage requiring repair (power loss does not damage systems)
+- **Exception**: Secondary consequences may persist (e.g., if oxygen fully depleted during outage, personnel still suffocate)
+
+---
+
+## Storage and Management
+
+### Battery Reserve System
+**Answer**: Automatic backup mode
+- **Activation**: Automatic when net power < 0
+- **Capacity**: [TBD - Suggest 30-60 seconds for MVP?]
+- **Discharge rate**: [TBD - Constant drain or scales with deficit?]
+  - **Option A**: Fixed duration (e.g., 60 seconds regardless of deficit size)
+  - **Option B**: Scales with deficit (larger deficit = faster depletion)
+- **Recharge**: [TBD - Instant when surplus? Gradual?]
+  - **Suggest**: Instant recharge when power positive (simpler)
+- **Upgrades**: [TBD - Can player increase backup capacity?]
+
+### Consumption Calculation
+**Answer**: Per-room/object static consumption
+- **Base model**: Each room/object has fixed power requirement
+  - Example: Barracks = 50 power, Lab = 150 power, Portal = 500 power
+- **Active operation costs**: [TBD - Do some rooms cost more when in use?]
+  - **Suggest MVP**: Fixed costs only (no variable consumption)
+  - **Future enhancement**: Portal costs extra when active, labs cost more when researching
+- **Worker presence**: [TBD - Do occupied rooms consume more?]
+  - **Suggest MVP**: No multiplier (simpler)
+  
+**Total Consumption** = Sum of all powered-on rooms/objects
+
+### Expansion Strategy
+**Answer**: Simple overcapacity model
+- **Can you over-build?**: Yes, unlimited generator construction
+- **Penalties for excess**: None (encourages safety margin)
+- **Benefits of excess**: Backup reserves recharge faster [if gradual recharge implemented]
+- **Upgrade paths**: [TBD - Can generators be upgraded or only build more?]
+  - **Suggest**: Build more generators only (simpler for MVP)
+
+---
+
+## Player Controls
+
+### Individual Room Control
+**Answer**: Per-room power toggle
+- Player can manually turn off power to individual rooms
+- **Purpose**: Reduce consumption during shortage
+- **UI Location**: [TBD - Room info panel? Hover menu?]
+- **Default state**: All rooms powered on when built
+- **Persistence**: Toggled state persists (doesn't auto-restore)
+
+### Master Power Control
+**Answer**: Global emergency shutoff
+- **Master switch**: Single UI button to cut power to entire facility
+- **Use case**: Intentional shutdown (unclear why player would want this?)
+- **Restoration**: Same master switch toggles power back on
+- **Effect**: Instant facility-wide shutdown, bypasses backup mode
+- **Note**: Distinguish from shortage-induced shutdown vs. manual shutdown in UI
+
+---
+
+## Implementation Summary
+
+### Power System Flow
+```
+1. Calculate Total Generation: Sum(all generators)
+2. Calculate Total Consumption: Sum(all powered-on rooms/objects)
+3. Net Power = Generation - Consumption
+
+If Net Power >= 0:
+   - Normal operation
+   - Backup fully charged
+   
+If Net Power < 0:
+   - Backup Mode active
+   - Backup depletes over time
+   - Warning displayed
+   
+If Backup depleted:
+   - Total shutdown
+   - All rooms trigger onPowerLoss()
+   
+When Net Power returns to >= 0:
+   - Systems instantly restore
+   - Backup recharges
+   - All rooms trigger onPowerRestored()
+```
+
+### UI Requirements
+- **Main display**: "Power: [Current Generation] / [Total Consumption]"
+- **Backup meter**: Visual indicator of backup remaining (when in backup mode)
+- **Warning state**: Clear visual when in backup mode
+- **Per-room toggle**: UI element to enable/disable room power
+- **Master switch**: Global power on/off button
 
 ---
 
