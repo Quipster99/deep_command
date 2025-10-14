@@ -1018,7 +1018,7 @@ When Net Power returns to >= 0:
 
 **Why This Blocks Implementation**: Missions are described as core gameplay loop differentiator. Can't build mission system without decision framework.
 
-# 🔴 5. Mission Decision System - ANSWERED
+# 🔴 5.1 Mission Decision System - ANSWERED
 
 ## Decision Generation
 
