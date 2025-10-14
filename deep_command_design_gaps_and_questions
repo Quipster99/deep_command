@@ -692,7 +692,268 @@ When Net Power returns to >= 0:
 
 **Why This Blocks Implementation**: Resource system is fundamental. UI shows resource counts but no backend system. Can't implement construction costs or consumption without delivery mechanics.
 
-**Recommendation**: Start with simple scheduled automatic deliveries and abstract storage. Expand to manual ordering and capacity limits in later iterations.
+# 🔴 4.1 Resource Delivery Mechanics - ANSWERED
+
+## Delivery System
+
+### Trigger Mechanism
+**Answer**: Player-initiated purchases with visible budget
+- **Purchasing model**: Player manually orders supplies using budget
+- **UI**: Purchase menu showing available supplies and costs
+- **Delivery trigger**: Ordered supplies arrive via truck at surface
+- **Budget tracking**: Visible currency amount in UI (e.g., "Budget: $50,000")
+- **No physical money**: Budget is abstract number, not stored as items in base
+
+### Currency System
+**Answer**: Visible abstract budget
+- **Budget display**: Always visible in main UI
+- **Income sources**: [TBD - How does player earn money?]
+  - Mission rewards?
+  - Periodic government funding?
+  - Research/artifact sales?
+- **Expenditures**: Manual supply purchases by player
+- **No cash storage**: Money never physically enters the base (unlike Evil Genius briefcases)
+
+### Delivery Point
+**Answer**: Surface delivery zone
+- **Surface staging area**: Dedicated zone where trucks unload
+- **Temporary storage**: Crates accumulate until minions move them
+- **Not automatically distributed**: Requires minion hauling to storage rooms
+- **Visual capacity**: [TBD - How many crates can pile up at surface?]
+
+### Delivery Time
+**Answer**: [TBD - Instant or delayed?]
+- **Option A**: Instant arrival when purchased (simplified)
+- **Option B**: Transit time after purchase (e.g., 30-60 seconds for truck to arrive)
+- **Recommend**: Transit time adds realism and planning requirement
+
+---
+
+## Storage System
+
+### Storage Capacity
+**Answer**: Specialized storage rooms required
+- **Storage rooms**: Player must build dedicated storage facilities
+- **Room types**: [TBD - Single "Storage Room" or multiple types?]
+  - **Option A**: Generic "Storage Room" holds all supply types
+  - **Option B**: Specialized rooms (Food Storage, Armory, Medical Bay, etc.)
+  - **Option C**: Hybrid (Generic storage + optional specialized for bonuses?)
+- **Capacity per room**: [TBD - How many crates per storage room?]
+  - Visual limit based on room size (2x2 room = 4 crates? 3x3 = 9 crates?)
+
+### Storage Room Mechanics
+**Answer**: Physical crate storage with visual representation
+- **Crates visible**: Storage rooms visually fill with crate models
+- **Capacity limits**: Each storage room has maximum crate count
+- **Visual feedback**: Player can see at a glance how full storage is
+- **Overflow prevention**: Cannot deliver more than storage capacity allows
+- **Quarters difference**: [TBD - How do quarters handle food differently?]
+  - Do quarters consume from storage, or store their own food?
+
+### Resource Location
+**Answer**: Physical crates must be hauled to storage/destination
+- **No auto-distribution**: Crates at surface must be manually hauled
+- **Minion task**: Workers transport crates from surface → storage rooms
+- **From storage to use**: [TBD - Are crates then hauled from storage to rooms that need them?]
+  - **Option A**: Construction sites pull from storage (second hauling step)
+  - **Option B**: Storage is just for stockpiling, direct surface → construction hauling also works
+- **Visual presence**: Crates physically exist in world until consumed
+
+---
+
+## Resource Types
+
+### Supply Categories
+**Answer**: [TBD - Generic or specialized crates?]
+- **Option A - Generic supplies**:
+  - All crates identical
+  - Any crate can fulfill any need
+  - Simplest implementation
+  
+- **Option B - Typed supplies**:
+  - Building Materials (for construction)
+  - Food (for personnel)
+  - Medical (for infirmary)
+  - Ammunition (for armory)
+  - Different crate visuals per type
+  
+- **Option C - Hybrid**:
+  - Generic "Supplies" for most things
+  - Specialized types only for specific needs (food, medical)
+
+**Recommend**: Option A (generic) for MVP, expand to types later
+
+### Crate Visual Representation
+**Answer**: Physical 3D objects in game world
+- **Model**: Standard crate 3D model(s)
+- **Stacking**: [TBD - Do crates stack visually or spread across floor?]
+- **Placement**: [TBD - Snap to grid or free-placed by system?]
+- **Consumption**: Crates disappear when consumed (construction complete, food eaten, etc.)
+
+---
+
+## Supply Chain Disruption
+
+### Interruption Scenarios
+**Answer**: [TBD - Can deliveries be disrupted?]
+- **Budget depletion**: Player runs out of money (cannot purchase)
+- **Story disruptions**: [Optional] Surface attacks cut supply lines
+- **Political consequences**: [Optional] Funding reduced due to failures
+- **Recommend**: Budget management only for MVP
+
+### Contingency Planning
+**Answer**: Strategic stockpiling
+- **Storage expansion**: Build more storage rooms for larger reserves
+- **Budget management**: Balance spending vs. saving for emergencies
+- **Portal acquisition**: [TBD - Can supplies be obtained through gate missions?]
+
+### Spoilage and Decay
+**Answer**: [TBD - Do resources expire?]
+- **No decay**: Crates never spoil (simpler)
+- **Food decay**: Food crates expire after X time (more realistic)
+- **Recommend**: No decay for MVP
+
+---
+
+## Exotic Materials
+
+### Unique Acquisition
+**Answer**: Obtained through portal missions
+- **Source**: Returned through gate after off-world missions
+- **Arrival point**: [TBD - Gate room itself or surface delivery?]
+  - **Recommend**: Arrive at gate room (different from supply deliveries)
+- **Visual distinction**: [TBD - Different crate appearance?]
+  - Special colored/marked crates for exotic materials
+
+### Usage
+**Answer**: Advanced construction and research
+- **Building material**: Required for advanced room types
+- **Research input**: Used in specific research projects
+- **Storage**: [TBD - Store with regular supplies or need special containment?]
+  - **Option A**: Standard storage rooms
+  - **Option B**: Specialized "Secure Storage" room required
+  - **Recommend**: Standard storage for MVP, special later
+
+---
+
+## Construction Supply Flow
+
+### Room Supply Requirements
+**Answer**: Construction requires delivered supplies
+- **Construction phase**: Rooms need X crates to complete
+  - Number varies by room type and size
+  - Minions haul from storage (or surface) to construction site
+  - Visual: Crates pile up at construction site during build
+  
+### Operational Supply Consumption
+**Answer**: [TBD - Do completed rooms need ongoing supplies?]
+- **Option A - Construction only**:
+  - Rooms only need supplies during construction
+  - Once built, no ongoing consumption
+  - Simplest model
+  
+- **Option B - Operational consumption**:
+  - Barracks consume food periodically
+  - Armory consumes ammunition when used
+  - Medical bay consumes medical supplies treating wounded
+  - More realistic, more management
+  
+**Recommend**: Option A for MVP, Option B as enhancement
+
+---
+
+## Minion Hauling System
+
+### Hauling Behavior
+**Answer**: Autonomous worker task system
+- **Task assignment**: Workers automatically assigned hauling tasks
+- **Priority**: [TBD - Construction > storage > operational?]
+- **Pathfinding**: Standard A* to nearest needed crate
+- **Visual**: Minion carries crate from point A to point B
+
+### Carry Capacity
+**Answer**: [TBD - Crates per minion?]
+- **Option A**: One crate per minion (clear visuals)
+- **Option B**: Multiple crates per minion (faster logistics)
+- **Recommend**: One crate for visual clarity
+
+### Storage Management
+**Answer**: Workers distribute to appropriate storage
+- **Routing logic**: [TBD - How do workers choose which storage room?]
+  - Nearest available storage with capacity?
+  - Player-designated primary storage?
+  - Balanced distribution across all storage?
+- **Overflow**: If all storage full, crates remain at surface
+
+---
+
+## Open Items Requiring Decisions
+
+### Critical (Blocks Implementation)
+1. **Income system**: How does player earn money?
+2. **Starting budget**: How much money does player start with?
+3. **Supply costs**: How much does each crate cost?
+4. **Storage room capacity**: How many crates per storage room?
+5. **Storage room types**: Generic or specialized?
+6. **Crate types**: Generic or specialized (food/medical/ammo)?
+7. **Delivery time**: Instant or transit delay?
+
+### Important (Affects Gameplay)
+8. **Construction costs**: How many crates per room type?
+9. **Operational consumption**: Do rooms consume supplies after built?
+10. **Exotic material storage**: Standard or specialized storage?
+11. **Hauling priority**: What order do minions prioritize deliveries?
+
+### Enhancement (Post-MVP)
+12. **Resource decay**: Do food/medical supplies expire?
+13. **Supply disruption**: Can deliveries be blocked by story events?
+14. **Portal trade**: Can supplies be obtained through gate?
+15. **Storage bonuses**: Do specialized storage rooms provide benefits?
+
+---
+
+## Implementation Summary
+
+### Purchase Flow
+```
+1. Player opens purchase menu
+2. Selects supplies to order (costs budget)
+3. Budget deducted immediately
+4. [Optional] Transit time delay
+5. Truck arrives at surface delivery zone
+6. Crates unloaded into surface staging area
+```
+
+### Distribution Flow
+```
+1. Crates sit at surface staging area
+2. Workers assigned hauling tasks
+3. Workers path to surface, grab crate
+4. Workers path to storage room with capacity
+5. Crate placed in storage room (visual model)
+6. Repeat until surface cleared or storage full
+```
+
+### Construction Flow
+```
+1. Player queues room construction
+2. Room requires X crates to complete
+3. Workers check storage (or surface) for crates
+4. Workers haul crates to construction site
+5. Crates pile at site during construction
+6. When X crates delivered, construction completes
+7. Crates at site disappear (consumed)
+```
+
+### Visual Representation
+- **Surface**: Pile of crates accumulating at delivery zone
+- **In-transit**: Workers carrying individual crates
+- **Storage rooms**: Crates visible filling up storage
+- **Construction sites**: Crates piling up during build
+
+---
+
+**Status**: Core system framework defined, requires detailed specifications for budget economy, storage capacity values, and resource type decisions
 
 ---
 
