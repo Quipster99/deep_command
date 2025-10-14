@@ -65,6 +65,190 @@ This document identifies critical gaps, unanswered questions, and areas requirin
 
 **Recommendation**: Define excavation as highest priority. Create detailed specification document covering designation UI, worker task selection algorithm, and progression system.
 
+### 🔴 1.1 Excavation System Mechanics - Defined
+
+## System Overview
+
+### Designation Phase
+
+#### Blueprint Creation
+- Click and drag to mark rectangular areas for room construction
+- Right-click and drag to remove designations (un-designate)
+- Multiple editing passes allowed before confirmation
+
+#### Validation Requirements
+- **Corridor Connection**: Rooms must connect to existing corridor network
+- **Contiguous Area**: Marked tiles must form a single connected region
+- **Layer Compatibility**: Room type must be valid for current layer
+
+#### Visual Feedback
+
+**Valid Layout**: Blue overlay on designated tiles
+
+**Invalid Layout**: Red overlay on problematic tiles
+- If not connected to corridor: entire room is red
+- If non-contiguous: disconnected sections are red
+- If overlapping with existing structures: overlapping tiles are red
+
+**Ready Button**: Appears when layout is valid, allows confirmation
+
+---
+
+## Construction Phase
+
+Once the "Ready" button is clicked:
+
+### 1. Visual State Change
+- Blueprint area becomes "tarped off" with construction tent overlay
+- Visual indication that work is in progress
+- Construction progress indicator appears
+
+### 2. Worker Behavior
+Workers automatically claim construction tasks from queue
+
+Priority based on:
+- Player-set priority flags (if implemented)
+- Proximity to available workers
+- Task age (older tasks prioritized)
+
+Multiple workers can collaborate on large rooms
+
+### 3. Supply Gathering
+Workers automatically path to:
+- Storage rooms containing required supplies
+- Surface delivery point if supplies insufficient
+
+Supply mechanics:
+- Supplies are "reserved" when worker claims task
+- Workers transport supplies to construction site
+
+### 4. Construction Progression
+Progressive visual changes under construction tent
+
+Percentage completion based on:
+- Supply delivery progress
+- Worker time investment
+- Room size (larger = longer construction)
+
+Can be paused if workers reassigned or supplies run out
+
+### 5. Completion
+- Construction tent disappears
+- Room foundation/floor appears
+- Room is now ready for furniture/equipment placement
+- Room begins consuming power/life support
+
+---
+
+## Material Properties
+
+### Material Types
+Soft earth, rock, reinforced stone are *visual flavor only*
+- Affect excavation aesthetic (different tile textures)
+- No gameplay impact on construction time
+- All rooms take same base time modified by size and worker count
+
+### Time Calculation
+```
+Construction Time = (Room Size in Tiles × Base Time per Tile) / Worker Count
+
+Base Time per Tile = 2 seconds (configurable)
+Worker efficiency affected by skill level and morale
+```
+
+---
+
+## Construction States
+
+| State | Description |
+|-------|-------------|
+| **Designated** | Blueprint marked, awaiting confirmation |
+| **Validated** | Blueprint confirmed valid, ready button available |
+| **Confirmed** | Ready button pressed, construction tent appears |
+| **In Progress** | Workers actively gathering supplies and building |
+| **Paused** | Insufficient supplies or workers, progress halted |
+| **Completed** | Room functional, ready for furnishing |
+
+---
+
+## Failure Handling
+
+- **Cave-ins**: None - structural integrity is abstracted away
+- **Worker Safety**: No injury risk during construction
+- **Supply Shortages**: Construction pauses, resumes when supplies delivered
+- **Cancellation**: 
+  - Can cancel during any phase before completion
+  - Refund policy: 50% of invested supplies returned
+  - Workers drop task and become available
+
+---
+
+## Special Cases
+
+### Corridor System
+
+**Player-Defined**: Corridors are designated exactly like rooms
+- Players must explicitly designate corridor space to connect rooms
+- Corridors are a special "room type" with minimal construction cost
+- Strategic placement matters - corridors affect traffic flow and access
+- **Starting Corridor**: Games begin with a small corridor connected to surface/elevator
+- **Validation**: Rooms must have at least one tile adjacent to a corridor tile
+
+### Elevator Integration
+
+- Elevators count as valid connection points
+- Rooms and corridors can connect to elevator tiles directly
+- Players must build corridors from elevators to rooms on each layer
+
+### Multi-Layer Considerations
+
+- Each layer has independent room network
+- Elevators provide vertical corridor connections
+- Cannot designate rooms overlapping with layer above/below structures
+
+---
+
+## Equipment Requirements
+
+- **No Special Tools**: Workers don't need excavation equipment
+- **No Durability**: Construction is abstracted, no tool wear
+- **Upgrade Path**: Worker skill upgrades affect construction speed, not tools
+
+---
+
+## Player Controls
+
+| Control | Function |
+|---------|----------|
+| **Blueprint Mode Toggle** | Enter/exit blueprint placement mode |
+| **Room Type Selection** | Choose room type before designation (affects size constraints) |
+| **Priority Flags** | (Optional) Mark construction tasks as high/low priority |
+| **Cancellation** | Right-click construction tent to cancel and refund partially |
+
+---
+
+## UI Elements
+
+- **Blueprint Overlay**: Semi-transparent blue/red tiles during designation
+- **Construction Tent**: Visual indicator during build phase
+- **Progress Bar**: Shows completion percentage on construction sites
+- **Supply Requirements**: Tooltip shows needed supplies and current availability
+- **Validation Messages**: Clear feedback on why blueprint is invalid
+
+---
+
+## Implementation Priority
+
+**CRITICAL** - This is the foundation of base building gameplay.
+
+### Technical Requirements
+
+- Flood-fill algorithm for contiguity validation
+- Pathfinding check for corridor connectivity
+- Construction task queue system
+- Supply reservation system
+- Multi-worker collaboration logic
+
 ---
 
 ### 🔴 2. Elevator Implementation Details
