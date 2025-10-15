@@ -72,7 +72,7 @@
 ### Base Building
 
 #### Excavation System
-- **Designation Tools**: Players click-and-drag to blueprint rectangular rooms and corridors on a 32x32 grid; right-click drag removes pending tiles before confirmation.
+- **Designation Tools**: Players click-and-drag to blueprint rooms and corridors on a 64x64 grid; right-click drag removes pending tiles before confirmation.
 - **Validation Rules**: Blueprints must stay contiguous, connect to the existing corridor/elevator network, and satisfy room-specific layer requirements before the `Ready` button becomes available.
 - **Visual Feedback**: Valid tiles highlight blue; invalid tiles flash red with contextual messaging (disconnected, overlapping, or blocked).
 - **Construction Workflow**: Confirmed sites gain a tarp overlay and progress bar. Workers auto-claim based on priority, proximity, and task age, reserve required supply crates, haul them from storage or surface staging, and collaborate on large builds.
