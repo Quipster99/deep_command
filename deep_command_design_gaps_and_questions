@@ -1403,7 +1403,218 @@ If roll > Final Success Chance: Failure
 
 **Why This Is High Priority**: Security affects base survivability. Defense missions may be mid-game content, but system must be designed early.
 
-**Recommendation**: Define basic threat model and guard behavior for MVP. Expand with advanced defense mechanics in later phases.
+### 🟡 6. Combat and Security System - Defined
+
+# Combat and Security System
+
+## Overview
+
+The security system protects the base from hostile incursions through the portal and occasional surface threats. Players build defensive infrastructure, assign guards, configure alert protocols, and watch their security forces respond to threats autonomously.
+
+---
+
+## Threat Model
+
+### Threat Sources
+
+**Portal Incursions** (Primary)
+- Hostile aliens with combat capabilities
+- Infiltrators attempting sabotage or theft
+- Dangerous wildlife
+- Malfunctioning alien technology
+
+**Surface Threats** (Story-driven)
+- Rival organizations
+- Government inspections (must manage without violence)
+- Late-game crisis events
+
+**Internal Sabotage** (Rare)
+- Possessed personnel from alien artifacts
+- Low morale minions turning traitor
+
+### Escalation Pattern
+
+Threats become more frequent and dangerous as the game progresses. Early game sees minor incursions every few days; late game faces coordinated multi-vector attacks.
+
+**Warning System**: Portal sensor upgrades provide 15-60 seconds advance warning with threat assessment. Surface threats offer minutes of preparation time.
+
+---
+
+## Alert System
+
+Four customizable alert levels inspired by Evil Genius:
+
+### Green - Normal Operations
+Business as usual, guards patrol or hold positions.
+
+### Yellow - Elevated Awareness
+Guards take defensive positions, automated defenses power up but don't fire, non-combat personnel continue working.
+
+### Orange - Active Threat
+Guards engage intruders, civilians evacuate to safe zones, automated defenses activate, elevators prioritize security.
+
+### Red - Emergency
+All personnel can arm themselves, lockdown protocols seal sections, away teams may be recalled, self-destruct armed (late-game).
+
+### Customizable Protocols
+
+For each alert level, players configure:
+- Guard behavior (hold position, aggressive pursuit, defend specific areas)
+- Civilian response (work, evacuate, shelter, arm up)
+- Facility actions (seal doors, cut power to sections)
+- Automated defense targeting priorities
+
+Configuration happens in Security Office. Quick presets available for common strategies.
+
+---
+
+## Guard Infrastructure
+
+### Security Office
+Central command hub. Required for protocol customization and coordinated responses. Displays security camera feeds and improves alert reaction times.
+
+### Armory
+Stores weapons and armor in three tiers (Earth/Hybrid/Alien tech). Guards auto-equip when alerts raised. Civilians can access during Red alert if permitted.
+
+### Guard Posts
+1x1 stations where guards are assigned. Provides cover bonus and improves local response time. Can link to automated defenses for manual control.
+
+### Holding Cells
+Contain captured infiltrators or possessed personnel. Interrogation yields intelligence about future threats.
+
+---
+
+## Automated Defenses
+
+**Sentry Turrets**  
+Wall or ceiling mounted. Auto-target hostiles at Orange alert and above. Require line-of-sight.
+
+**Energy Barriers**  
+Block doorways or corridors. Activate at configured alert level. Can channel enemies into kill zones or seal critical areas.
+
+**Proximity Mines**  
+One-time-use area denial. Crafted from resources. Risk of friendly fire.
+
+**Advanced Sensors**  
+Improve warning time and provide detailed threat intelligence. Track hostile movement through base.
+
+**Camera Network**  
+Breaks infiltrator stealth. Records incidents for review. Requires Security Office.
+
+---
+
+## Guard Behavior & AI
+
+### Patrol Options
+
+**Player-Defined Routes**: Click-and-drag waypoint system for precise control.
+
+**Smart Patrol**: Guards automatically choose routes covering high-value areas.
+
+**Station-Based**: Guards hold positions at Guard Posts, respond to nearby threats.
+
+### Engagement Rules
+
+Guards detect threats through line-of-sight, sound, or alerts from Security Office. Behavior varies by alert level:
+- **Yellow**: Investigate but don't engage unless attacked
+- **Orange**: Engage and pursue within limits
+- **Red**: Engage and pursue until threat eliminated
+
+Guards use cover, call reinforcements when outnumbered, and retreat if wounded (except during Red alert).
+
+### Equipment
+
+Guards require weapons to be effective in combat. They auto-equip from nearest Armory when threats detected. Without Armory access, guards use unarmed combat (very weak). Equipment quality (Earth/Hybrid/Alien tech) significantly affects combat effectiveness.
+
+---
+
+## Combat Resolution
+
+Real-time combat system. Guards and enemies have health, damage, and defense stats. Guards use cover and coordinate when multiple units respond to same threat.
+
+### Casualties
+
+- Guards can be wounded, incapacitated, or killed
+- Deaths are permanent and cause morale penalties
+- Incapacitated hostiles can be captured for interrogation
+- Civilian casualties cause severe morale damage
+
+### Enemy Types
+
+Range from basic hostiles to elite soldiers, stealthy infiltrators, and dangerous beasts. Each requires different tactical responses.
+
+---
+
+## Building Damage & Repair
+
+### Damage States
+
+Buildings take damage from stray fire and explosives. Progress through intact → damaged → heavily damaged → destroyed states. Damaged buildings operate at reduced efficiency or may fail completely.
+
+### Critical Impacts
+
+- Destroyed Power Generators cause blackouts
+- Damaged Life Support leads to oxygen depletion
+- Portal Chamber damage prevents missions
+- Destroyed Elevators block vertical movement
+
+### Cascade Effects
+
+Power and life support damage can cascade through connected systems, potentially forcing evacuation of entire layers.
+
+### Repair
+
+Workers automatically prioritize repairs during Green alert. Destroyed buildings must be fully reconstructed.
+
+---
+
+## Infiltration & Detection
+
+**Infiltrators** are stealth units invisible to guards. They sabotage buildings, steal artifacts, or assassinate personnel.
+
+### Detection Methods
+
+- Security cameras (most reliable)
+- Guard patrols (low chance)
+- Advanced sensors (delayed tracking)
+
+Counter-infiltration requires investment in detection infrastructure and frequent patrols.
+
+---
+
+## Strategic Considerations
+
+### Defense in Depth
+
+Place critical facilities on deeper layers. Create "security layers" between portal and important areas. Use elevator control to isolate threats.
+
+### Resource Trade-offs
+
+Heavy security means high operating costs (guard salaries, power for defenses). Under-defended bases face repair costs and casualties. Finding the balance is a core strategic decision.
+
+### Guard vs. Automation
+
+Guards are flexible but expensive (salaries, equipment). Automated defenses are fire-and-forget but require power and strategic placement. Optimal defense combines both.
+
+### Alert Philosophy
+
+Players choose between conservative (quick escalation, high security costs) and aggressive (accept more risk, lower costs) protocols. No single "correct" approach.
+
+---
+
+## Integration Points
+
+**Layer System**: Enemies cannot move between layers without elevators. Strategic elevator placement creates defensive chokepoints.
+
+**Personnel**: Heroes can be drafted during emergencies, much more effective than guards but risk injury affecting mission readiness.
+
+**Research**: Security tech tree includes better weapons, armor, automated defenses, and detection systems.
+
+**Power System**: Automated defenses are power-hungry. Power failures disable active defenses.
+
+---
+
+*The security system provides strategic depth through infrastructure choices and protocol customization while maintaining indirect control. Players prepare defenses and set rules, then watch their security forces execute during threats.*
 
 ---
 
