@@ -377,7 +377,7 @@ The elevator is the primary vertical transportation mechanism, allowing personne
 # Example structure from building_manager.gd
 class_name BuildingManager extends Node
 
-const GRID_SIZE = Vector2i(32, 32)
+const GRID_SIZE = Vector2i(64, 64)
 var _grid_data: Dictionary = {}  # Vector3i -> TileData
 var _buildings: Dictionary = {}   # Vector3i -> Building
 var _elevator_shafts: Dictionary = {}  # Vector2i -> Array[int] (layers)
