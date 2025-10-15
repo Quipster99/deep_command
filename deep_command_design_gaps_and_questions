@@ -1695,7 +1695,88 @@ Players choose between conservative (quick escalation, high security costs) and 
 
 **Why This Is High Priority**: Heroes are player's primary investment. Unclear progression could frustrate players. Recruitment pipeline must be balanced with difficulty.
 
-**Recommendation**: Design complete hero lifecycle (recruitment → training → mission → recovery → retirement/death). Balance roster growth rate with mission difficulty curve.
+### 🟡 7. Hero System Details - Defined
+
+## Roster Management
+
+### Starting Roster
+- 4 heroes at game start (one per class: Soldier, Engineer, Medic, Scout)
+- Pre-generated with randomized stats
+
+### Recruitment
+- Recruitment Terminal building enables hiring
+- Periodic candidate availability
+- Player accepts or declines candidates
+- New heroes start at level 1 with randomized stat distributions
+
+### Roster Capacity
+- Base capacity limit
+- Expandable via Quarters upgrades
+- Hard cap on total heroes
+
+## Progression
+
+### Experience & Leveling
+- XP gained from mission completion and objectives
+- Linear level progression
+- Max level cap
+
+### Skill Points
+- One skill point awarded per level
+- Allocate to core stats: Accuracy, Health, Speed, Tech
+- Permanent allocation (no respec)
+- No per-level skill caps
+
+### Training Room (Optional)
+- Heroes gain passive XP when not on missions
+- Requires Energy to operate
+- Limited capacity
+
+## Health & Recovery
+
+### Permadeath
+- Default enabled
+- Toggleable difficulty setting
+- Heroes reaching 0 HP are KIA (if enabled) or critically wounded (if disabled)
+
+### Injury Recovery
+- Wounded heroes require time in Medical Bay
+- Medical Bay has capacity limit
+- Full recovery after waiting period
+- No permanent injuries
+
+## Equipment
+
+### Acquisition
+- Crafted via Research Tree
+- Occasionally found as mission rewards
+
+### Equipment Types
+- Weapons
+- Armor
+- Tools (class-specific)
+- One weapon + one armor per hero
+
+### Tiers
+- Basic (starting gear)
+- Advanced (mid-game research)
+- Elite (late-game research)
+- Higher tiers provide stat bonuses
+- No durability or degradation
+
+## Mission Deployment
+
+### Assignment
+- Missions require 2-4 heroes depending on type
+- Heroes must be available (not injured or training)
+- Deployed heroes unavailable until mission completes
+- Pre-mission loadout selection from available equipment
+
+## Excluded Mechanics
+- No relationship/morale systems
+- No psychological effects or trauma
+- No equipment durability or maintenance
+- No inter-hero synergies or conflicts
 
 ---
 
