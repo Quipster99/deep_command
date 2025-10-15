@@ -72,11 +72,13 @@
 ### Base Building
 
 #### Excavation System
-- **Grid-based digging**: 32x32 pixel tiles on each layer
-- **Material types**: Soft earth, rock, reinforced stone (visual only, affects excavation time)
-- **Excavation costs**: Time and worker allocation, scales with depth
-- **Aesthetic elements**: Support beams and ventilation are purely decorative, automatically placed as part of room construction
-- **Progressive Depth**: Deeper layers unlock through research/progression and cost more to excavate
+- **Designation Tools**: Players click-and-drag to blueprint rectangular rooms and corridors on a 32x32 grid; right-click drag removes pending tiles before confirmation.
+- **Validation Rules**: Blueprints must stay contiguous, connect to the existing corridor/elevator network, and satisfy room-specific layer requirements before the `Ready` button becomes available.
+- **Visual Feedback**: Valid tiles highlight blue; invalid tiles flash red with contextual messaging (disconnected, overlapping, or blocked).
+- **Construction Workflow**: Confirmed sites gain a tarp overlay and progress bar. Workers auto-claim based on priority, proximity, and task age, reserve required supply crates, haul them from storage or surface staging, and collaborate on large builds.
+- **Progress States**: Designated → Validated → Confirmed → In Progress → Paused (waiting on workers/supplies) → Completed. Cancelling at any point refunds 50% of invested supplies.
+- **Material Behavior**: Terrain materials are cosmetic only; construction time follows `Room Tiles × Base Time per Tile ÷ Active Workers`, modified by worker skill and morale. No special tools or durability tracking are required.
+- **Corridor Network**: Corridors are explicitly blueprinted like rooms, act as mandatory connectors, and the starting base spawns with a short corridor linked to the surface elevator.
 
 #### Room Types
 
@@ -86,6 +88,7 @@
 - **Life Support**: Maintains atmosphere and temperature
 - **Quarters**: Housing for personnel (capacity based on size)
 - **Cafeteria**: Morale and efficiency boost
+- **Storage Room**: Physical crate storage with finite capacity
 - **Elevator**: Vertical access to adjacent layers, stackable to create shafts through multiple layers
 
 **Operational Rooms**
@@ -121,10 +124,10 @@
 The elevator is the primary vertical transportation mechanism, allowing personnel and equipment to move between layers.
 
 **Placement Rules**:
-- Can be placed on any excavated tile on any layer
-- Acts as a 1-tile or multi-tile structure (exact size TBD)
-- To access the layer below, an elevator must be placed directly beneath an existing elevator
+- Occupies a 2x2 footprint that snaps to grid-aligned even coordinates on every serviced layer
+- Requires matching 2x2 construction on consecutive layers to form a continuous shaft
 - Creates a continuous vertical shaft when stacked through multiple layers
+- Cannot share tiles with other rooms or props
 
 **Strategic Considerations**:
 - **Multiple Shafts**: Players can build several independent elevator systems
@@ -136,15 +139,16 @@ The elevator is the primary vertical transportation mechanism, allowing personne
 
 **Functional Behavior**:
 - Personnel automatically use nearest elevator when pathfinding between layers
-- Elevator capacity may limit simultaneous users (design TBD)
-- Travel time between layers creates realistic delays
-- Elevators require power to function
-- Malfunctioning elevators trap personnel until repaired
+- Target capacity is four units per trip (one per tile) with final tuning TBD
+- Travel time scales with layer distance (baseline 1 second per layer plus optional loading time, TBD)
+- Elevators remain functional regardless of power state and cannot be damaged
+- Players can manually halt an elevator; halted shafts are removed from pathfinding until reactivated
+- Ladders provide a slower, always-available fallback for vertical travel
 
 **Visual Design**:
 - Clearly visible shaft connecting aligned elevators
 - Animated platform movement
-- Status indicators (operational, damaged, unpowered)
+- Status indicators for operational, in-use, or manually halted states
 - Queue visualization when capacity-limited
 
 ### Personnel Management
@@ -217,7 +221,7 @@ The elevator is the primary vertical transportation mechanism, allowing personne
 
 **Active Mission Phase**:
 - **Status Reports**: Regular updates every 2-5 minutes
-- **Decision Points**: Critical moments requiring input
+- **Decision Milestones**: 2-4 event-driven decisions per mission, triggered by scripted encounters and mission progress
 - **Resource Management**: Limited supplies and ammunition
 - **Dynamic Events**: Unexpected complications
 - **Extraction Options**: Emergency recall availability
@@ -228,6 +232,18 @@ The elevator is the primary vertical transportation mechanism, allowing personne
 - **Strategic**: "Push forward or consolidate position?"
 - **Resource**: "Use medical supplies now or save?"
 - **Information**: "Investigate anomaly or stay on mission?"
+
+**Decision Structure**:
+- Difficulty affects consequence severity, not decision count; harder missions punish failure more harshly.
+- Intel level expands the available options (baseline 2 choices, up to 4 with adequate intel and prep), sometimes including an explicit "Hold position" alternative.
+- Missions pause while a decision awaits input, but base management continues in real time; multiple missions can queue unresolved decisions in a dedicated UI.
+- No timers are imposed, encouraging deliberate play.
+
+**Resolution & Outcomes**:
+- Each option lists its base success chance. Final chance = base value + hero skill bonuses + equipment modifiers; a d100 roll determines success.
+- Option results feed into a cumulative mission score: Critical Success (90+), Success, Partial Success, Failure, or Critical Failure (<30).
+- Good choices award additional resources/intel, while poor choices risk injuries, permanent hero death, lost gear, and reduced rewards.
+- Immediate feedback communicates direct outcomes, while longer-term repercussions (e.g., unidentified artifacts) resolve during debrief.
 
 **Post-Mission Phase**:
 - Debrief with full mission log
@@ -294,28 +310,35 @@ The elevator is the primary vertical transportation mechanism, allowing personne
 ### Resource Management
 
 #### Primary Resources
-- **Power**: Generated vs. consumed, battery reserves
-- **Supplies**: General construction and operational materials (delivered from surface)
-- **Food**: Personnel sustenance and morale (regular deliveries)
-- **Medical Supplies**: Healing items and drugs (purchased/delivered)
-- **Ammunition**: Military operations consumables (procured externally)
-- **Exotic Materials**: Alien resources from missions (only source is portal expeditions)
+- **Budget**: Abstract currency displayed in the HUD; funds all procurement.
+- **Supplies (Crates)**: Generic shipments used for construction and other base needs; purchased with Budget, delivered to the surface staging zone, and stored physically.
+- **Power**: Facility-wide generation versus consumption tracked as a global pool with backup reserves.
+- **Exotic Materials**: Off-world resources returned through the portal for advanced rooms and research.
 
 #### Secondary Resources
-- **Intel**: Information quality for missions
-- **Reputation**: Standing with various factions
-- **Security**: Base threat level
-- **Morale**: Overall personnel happiness
-- **Knowledge**: Cumulative research progress
+- **Intel**: Improves mission planning and unlocks expanded decision options.
+- **Security**: Measures threat level and automated defense readiness.
+- **Morale**: Overall personnel happiness and work efficiency.
+- **Knowledge**: Cumulative research progress and breakthroughs.
 
-#### Resource Flow
-- Daily consumption rates
-- Regular supply deliveries from surface logistics
-- Emergency reserves system
-- Trade opportunities through portal
-- Mission rewards as primary exotic resource source
-- Budget constraints for procurement
-- Crisis management protocols
+#### Supply & Storage Flow
+- Players place supply orders through a purchase UI; costs deduct from Budget immediately.
+- Deliveries arrive by truck at a surface staging area (short transit delay TBD) and spawn physical crates.
+- Workers haul crates to Storage Rooms with finite, visually represented capacity; overflow remains topside until space frees up.
+- Construction sites consume the crates delivered to them; completed rooms do not require ongoing supplies in the MVP.
+
+#### Power Distribution
+- Generators feed a unified power pool shared across all layers; no wiring, radius checks, or layer segregation.
+- When consumption exceeds generation the facility enters automatic Backup Mode, providing limited-duration reserves before a total shutdown (capacity and depletion curve TBD).
+- Each room defines fixed power usage and `onPowerLoss/onPowerRestored` hooks tailored to its function; elevators remain operational regardless of outages.
+- Players can toggle individual rooms or trigger a global emergency shutoff to manage crises manually.
+
+#### Exotic Material Handling
+- Exotic materials return exclusively from portal missions (default arrival: gate room) and store alongside standard crates unless specialized containment is introduced later.
+- Spent on advanced construction projects and high-tier research.
+
+#### Contingency Planning
+- Maintaining spare Budget, storage capacity, and backup power is the primary hedge against procurement delays or sudden demand spikes; supply disruptions stem from player finances rather than scripted shipment schedules.
 
 ---
 
@@ -345,6 +368,7 @@ The elevator is the primary vertical transportation mechanism, allowing personne
 - **Elevator Shafts**: Primary method for layer-to-layer movement
 - **Multiple Routes**: Players can create several independent elevator systems
 - **Strategic Positioning**: Elevator placement affects base efficiency and security
+- **Ladders**: Secondary, slower vertical connectors that remain operable during elevator halts or power shortages
 
 ### Grid & Building System
 
