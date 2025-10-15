@@ -1861,8 +1861,122 @@ Players choose between conservative (quick escalation, high security costs) and 
 
 **Why This Is High Priority**: Minions are the workforce that makes everything function. Autonomous behavior must be predictable enough that players can plan, but not micromanagement-heavy.
 
-**Recommendation**: Design simple task priority system for MVP (proximity + priority tags). Expand with skill matching and preferences in later iterations. Define morale threshold effects clearly.
+### 🟡 8. Minion Behavior and Management - Defined
 
+## Overview
+Minions are autonomous workers who automatically select and perform tasks based on availability and skill match. No direct control of individual minions.
+
+## Minion Types
+
+### Worker
+- Construction and building
+- Basic maintenance
+- Hauling materials and resources
+- General labor
+
+### Technician
+- Research lab operation
+- Equipment maintenance
+- Power system operation
+- Advanced repairs
+
+### Guard
+- Base defense
+- Patrol routes
+- Respond to intrusions
+- Protect critical facilities
+
+## Task Assignment (Autonomous)
+
+### Task Priority System
+- Minions automatically select tasks from queue
+- Priority factors:
+  - Task urgency (critical systems first)
+  - Skill match (technicians prefer tech tasks)
+  - Proximity (nearest available task)
+- No manual assignment or micromanagement
+
+### Task Types
+- Construction (building new rooms)
+- Maintenance (repairing damaged facilities)
+- Operation (running labs, generators, etc.)
+- Hauling (moving resources)
+- Defense (guards only)
+
+## Recruitment & Population
+
+### Recruitment
+- Recruitment Terminal building enables hiring
+- Periodic arrival of new minions
+- Player specifies desired minion type
+- New minions arrive over time
+
+### Population Capacity
+- Quarters determines maximum minion population
+- Hard cap enforced by quarters capacity
+- Insufficient quarters prevents new recruitment
+
+## Needs & Morale
+
+### Basic Needs
+- Sleep (quarters)
+- Food (cafeteria)
+- Recreation (break rooms, entertainment)
+- Minions autonomously fulfill needs when required
+
+### Morale Factors
+**Positive:**
+- Adequate food and quarters
+- Recreation facilities available
+- Mission successes
+- Well-maintained base
+
+**Negative:**
+- Poor living conditions
+- Insufficient food or rest facilities
+- Minion deaths
+- Base attacks
+- Mission failures
+
+### Low Morale Effects
+- Reduced work efficiency
+- Slower task completion
+- Increased chance of errors
+- Potential desertion at critically low morale
+
+## Work Shifts
+
+### Shift System
+- Minions work in automatic shifts
+- Rest when fatigued (return to quarters)
+- Eat when hungry (visit cafeteria)
+- No player-defined schedules
+
+### Coverage
+- Ensure sufficient minion population for 24/7 operations
+- Insufficient staff leads to task backlogs
+- Critical systems may idle if unstaffed
+
+## Death & Replacement
+
+### Mortality
+- Minions can die from:
+  - Enemy attacks during base defense
+  - Life support failures
+  - Combat missions (if assigned)
+- Permanent loss (no respawn)
+
+### Impact
+- Morale penalty to surviving minions
+- Loss of workforce capacity
+- Must recruit replacements to restore numbers
+
+## Key Design Principles
+- Autonomous behavior (no micromanagement)
+- Collective workforce (not individual management)
+- Player focuses on infrastructure and capacity
+- Morale is base-wide, not per-minion
+- Simple, predictable behavior patterns
 ---
 
 ### 🟡 9. Life Support System
