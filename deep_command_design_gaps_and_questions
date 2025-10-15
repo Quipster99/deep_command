@@ -1981,59 +1981,7 @@ Minions are autonomous workers who automatically select and perform tasks based 
 
 ### 🟡 9. Life Support System
 
-**Current State**: Listed as essential infrastructure but implementation undefined.
-
-**Open Questions**:
-
-#### Distribution Method
-- **Coverage Model**:
-  - Radius from Life Support rooms?
-  - Abstract (global once built)?
-  - Per-room requirement?
-  - Oxygen/atmosphere pipes?
-- **Visual Feedback**:
-  - How do players see which areas are covered?
-  - Overlay mode?
-  - Color tint on uncovered areas?
-  - Warning indicators?
-
-#### Failure Consequences
-- **Grace Period**:
-  - Instant death when life support fails?
-  - Countdown timer before danger?
-  - How long can personnel survive?
-- **Health Effects**:
-  - Gradual health drain?
-  - Sudden incapacitation?
-  - Permanent damage if too long?
-- **Evacuation**:
-  - Do personnel automatically flee unpowered areas?
-  - Need player order to evacuate?
-  - Pathfinding to safe zones?
-
-#### Capacity and Scaling
-- **Coverage Limits**:
-  - Does one Life Support room cover entire base?
-  - Multiple rooms needed for large bases?
-  - Capacity measured in rooms or personnel?
-- **Redundancy**:
-  - Benefits of multiple Life Support systems?
-  - Backup power integration?
-  - Isolated section survivability?
-
-#### Environmental Variations
-- **Layer Differences**:
-  - Do deeper layers have different requirements?
-  - Higher power cost at depth?
-  - Temperature regulation at different layers?
-- **Room Types**:
-  - Do some rooms need special atmospheres?
-  - Containment rooms with isolated environments?
-  - Greenhouse with different atmospheric mix?
-
-**Why This Is High Priority**: Life Support is positioned as critical infrastructure. Failure must have clear, understandable consequences. System must be simple enough to manage but threatening enough to matter.
-
-**Recommendation**: Start with abstract "global coverage once built" for MVP. Add radius-based or room-specific requirements if more strategic depth needed.
+**Current State**: To be removed from the GDD
 
 ---
 
